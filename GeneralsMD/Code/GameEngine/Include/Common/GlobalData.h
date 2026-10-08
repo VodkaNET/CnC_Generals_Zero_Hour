@@ -135,6 +135,8 @@ public:
 	// -rmlignoremodwnd keeps the RmlUi screens even where a mod supplies the .wnd.
 	Bool m_rmlIgnoreModWnds;
 
+	Bool m_d3d8RmlUiFix;
+
 	// -rmlwnd MainMenu,QuitMenu sends those screens back to their .wnd, as a mod's would (to test the fallback).
 	AsciiString m_rmlForceWnds;
 

@@ -189,6 +189,12 @@ Int parseRmlIgnoreModWnds(char *args[], int num)
 	return 1;
 }
 
+Int parseD3D8RmlUiFix(char *args[], int num)
+{
+	TheWritableGlobalData->m_d3d8RmlUiFix = TRUE;
+	return 1;
+}
+
 // -rmlwnd MainMenu,QuitMenu: those screens use their .wnd whether or not a mod provides it.
 Int parseRmlForceWnds(char *args[], int num)
 {
@@ -1236,6 +1242,7 @@ static CommandLineParam paramsForEngineInit[] =
 	// TheSuperHackers @feature RmlUi phase 1: use the original .wnd menus, not RmlUi.
 	{ "-wnd", parseUseLegacyMenus },
 	{ "-rmlignoremodwnd", parseRmlIgnoreModWnds },
+	{ "-d3d8_rmlui_fix", parseD3D8RmlUiFix },
 	{ "-rmlwnd", parseRmlForceWnds },
 
 	// TheSuperHackers @feature RmlUi phase 2: show Rml::Debugger over RmlUi screens.

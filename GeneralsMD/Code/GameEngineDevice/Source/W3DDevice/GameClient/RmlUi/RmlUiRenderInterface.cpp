@@ -151,6 +151,13 @@ void RmlUiRenderInterface::setOrthoProjection(int left, int right, int top, int 
 	m._42 = (t + b) / (b - t);
 	m._43 = 0.5f;
 	m._44 = 1.0f;
+
+	if (TheGlobalData && TheGlobalData->m_d3d8RmlUiFix)
+	{
+		m._41 -= 1.0f / (r - l);
+		m._42 += 1.0f / (b - t);
+	}
+
 	DX8Wrapper::_Get_D3D_Device8()->SetTransform(D3DTS_PROJECTION, &m);
 }
 
