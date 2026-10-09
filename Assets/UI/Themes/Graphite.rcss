@@ -1,0 +1,5 @@
+
+.screen .surface { background-color: #111213F0; border-color: #494B4D; }
+.screen .btn-cta, .screen .rail-item.selected { background-color: #D2D3D4; color: #161718; border-color: #ECEDED; }
+.screen .opt-label { color: #F0F0F0; }
+.screen .opt-desc { color: #A9ADB0; }

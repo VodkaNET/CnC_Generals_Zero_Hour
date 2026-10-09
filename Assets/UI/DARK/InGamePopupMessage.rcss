@@ -1,0 +1,50 @@
+
+
+body.pm
+{
+	box-sizing: border-box;
+	left: 164px;
+	top: 124px;
+	width: 172px;
+	height: auto;
+	font-size: 18dp;
+}
+
+.pm-panel
+{
+	display: block;
+	box-sizing: border-box;
+	background-color: #0E0F10EB;
+	border: 1dp #898A8B3A; 
+	border-top: 3dp #777879;
+}
+
+
+.pm-text
+{
+	display: block;
+	box-sizing: border-box;
+	padding: 12dp 14dp 4dp 14dp;
+	font-size: 18dp;
+	line-height: 24dp;
+	text-align: left;
+	white-space: pre-line;
+}
+
+.pm-footer
+{
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	padding: 6dp 10dp 10dp 10dp;
+}
+
+.screen button.pm-ok
+{
+	flex: 0 0 auto;
+	min-width: 90dp;
+	height: 36dp;
+	line-height: 34dp;
+	padding: 0 16dp;
+	text-align: center;
+}

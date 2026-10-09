@@ -1,0 +1,28 @@
+
+
+.join-card
+{
+	width: 560dp;
+}
+
+.join-lock
+{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	margin-bottom: 20dp;
+	color: #B1B2B3;
+}
+
+.join-lock mappedimage
+{
+	display: block;
+	width: 22dp;
+	height: 22dp;
+	margin-right: 12dp;
+}
+
+.join-lock mappedimage img
+{
+	display: block;
+}

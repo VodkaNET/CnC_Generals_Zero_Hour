@@ -1,0 +1,55 @@
+
+
+.dl-card
+{
+	width: 780dp;
+}
+
+
+.dl-file
+{
+	display: block;
+	min-height: 28dp;
+	font-size: 21dp;
+	line-height: 28dp;
+	font-weight: bold;
+	color: #F1F2F3;
+	word-break: break-word;
+}
+
+.progress.dl-bar
+{
+	height: 22dp;
+	margin-top: 16dp;
+}
+
+.dl-meta
+{
+	display: flex;
+	flex-direction: row;
+	margin-top: 10dp;
+	min-height: 24dp;
+	font-size: 17dp;
+	line-height: 24dp;
+	color: #B1B2B3;
+}
+
+
+.dl-status
+{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	height: 54dp;
+	font-size: 17dp;
+	font-weight: bold;
+	letter-spacing: 1dp;
+	text-transform: uppercase;
+	color: #DCDDDE;
+}
+
+.dl-status .dot
+{
+	margin-right: 10dp;
+	background-color: #D1FD04;
+}

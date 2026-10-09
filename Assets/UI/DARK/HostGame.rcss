@@ -1,0 +1,13 @@
+
+
+.host-card
+{
+	width: 620dp;
+}
+
+.host-rules
+{
+	margin-top: 24dp;
+	padding-top: 16dp;
+	border-top: 1dp #898A8B1E;
+}

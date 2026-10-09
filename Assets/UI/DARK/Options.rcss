@@ -1,23 +1,15 @@
-/*
-	Options.rcss -- the options (OptionsMenu.wnd) on the screen template (common.rcss): the
-	categories down a tab rail on the left, the chosen one's settings on the right as
-	label/control rows with the setting's tooltip text under its label, Cancel / Defaults / Accept
-	in the action bar.
 
-	It opens as an overlay over the main menu, the online welcome screen or the in-game quit
-	menu, so the whole page sits on a scrim that dims whatever is behind it, and it makes room
-	for the expanded social dock like the online screens (dock-host).
-
-	Disabled rows (restricted: in a game or logged in online; detail_controls_disabled: a named
-	preset that can't be changed there) dim their text; the controls disable themselves.
-*/
 
 body.screen
 {
-	background-color: #03050CC8;
+	background-color: #0E0F10C8;
 }
 
-/* ---- Rail and panel ---------------------------------------------------------------------------- */
+.interface-browse { margin-top: 8dp; }
+.interface-error { color: #FFB0A0; margin-top: 12dp; font-size: 16dp; }
+.interface-path { color: #ADB0B2; margin-top: 6dp; font-size: 12dp; line-height: 16dp; word-break: break-word; }
+
+
 .tab-rail
 {
 	flex: 0 0 300dp;
@@ -52,10 +44,10 @@ body.screen
 	letter-spacing: 2dp;
 	text-transform: uppercase;
 	color: #FFFFFF;
-	border-bottom: 1dp #8080FF28;
+	border-bottom: 1dp #898A8B28;
 }
 
-/* ---- Rows: label and its description on the left, the control in a fixed column on the right -- */
+
 .opt-row
 {
 	display: flex;
@@ -80,7 +72,7 @@ body.screen
 	display: block;
 	font-size: 20dp;
 	line-height: 26dp;
-	color: #EEF1FA;
+	color: #F1F2F3;
 }
 
 .opt-desc
@@ -89,7 +81,7 @@ body.screen
 	margin-top: 3dp;
 	font-size: 16dp;
 	line-height: 21dp;
-	color: #8089B0;
+	color: #8A8B8C;
 }
 
 .opt-control
@@ -107,15 +99,15 @@ body.screen
 
 .opt-row.disabled .opt-label, .opt-toggles.disabled .opt-label
 {
-	color: #7079A0;
+	color: #7A7B7C;
 }
 
 .opt-row.disabled .opt-desc, .opt-toggles.disabled .opt-desc
 {
-	color: #4A5070;
+	color: #515253;
 }
 
-/* A slider with its value after it. */
+
 .opt-slider
 {
 	display: flex;
@@ -136,15 +128,15 @@ body.screen
 	text-align: right;
 	font-size: 20dp;
 	font-weight: bold;
-	color: #EEF1FA;
+	color: #F1F2F3;
 }
 
 .opt-row.disabled .opt-value
 {
-	color: #4A5070;
+	color: #515253;
 }
 
-/* A whole row that toggles its checkbox: the box sits at the start of the control column. */
+
 label.opt-check-row:hover .opt-label
 {
 	color: #FFFFFF;
@@ -157,7 +149,7 @@ label.opt-check-row:hover .opt-label
 	align-items: center;
 }
 
-/* ---- The effect toggles, two to a row ---------------------------------------------------------- */
+
 .opt-group
 {
 	display: block;
@@ -203,13 +195,13 @@ label.opt-toggle:hover .opt-label
 	color: #FFFFFF;
 }
 
-/* ---- Action bar -------------------------------------------------------------------------------- */
+
 .action-bar button.btn-cta
 {
 	margin-left: 20dp;
 }
 
-/* ---- Narrower screens and beside the expanded dock ---------------------------------------------- */
+
 .dock-open .tab-rail { flex-basis: 250dp; }
 .dock-open .opt-control { flex-basis: 360dp; width: 360dp; }
 
@@ -219,7 +211,7 @@ label.opt-toggle:hover .opt-label
 	.opt-control { flex-basis: 360dp; width: 360dp; }
 	.opt-text { padding-right: 24dp; }
 
-	/* beside the dock: the control goes under its label */
+	
 	.dock-open .tab-rail { flex-basis: 200dp; }
 	.dock-open .tab-rail button.rail-item { font-size: 19dp; }
 	.dock-open .opt-row { flex-wrap: wrap; }
@@ -228,8 +220,7 @@ label.opt-toggle:hover .opt-label
 	.dock-open label.opt-toggle { width: 100%; }
 }
 
-/* In the narrower rail beside the open social dock a long category name (Russian "Network") takes
-   two lines, centred like one. */
+
 .dock-open .tab-rail button.rail-item
 {
 	display: flex;

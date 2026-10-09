@@ -1,0 +1,84 @@
+
+
+
+.conn
+{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	flex: 0 0 auto;
+	height: 20dp;
+	padding: 0 6dp;
+	background-color: #0E0F10B4;
+}
+
+.conn-dot
+{
+	display: block;
+	width: 9dp;
+	height: 9dp;
+	border-radius: 4dp;
+	background-color: #E8D440;
+}
+
+.conn.connected .conn-dot
+{
+	background-color: #36D8B2;
+}
+
+.conn-ms
+{
+	margin-left: 6dp;
+	font-size: 13dp;
+	font-weight: bold;
+	color: #B1B2B3;
+	white-space: nowrap;
+}
+
+
+.dock-open .su-map-col { flex-basis: 300dp; width: 300dp; }
+.dock-open .su-hero { padding: 14dp 14dp 16dp 14dp; }
+.dock-open .su-hero .map-frame { width: 272dp; }
+.dock-open .su-map-name { font-size: 22dp; line-height: 27dp; }
+.dock-open .su-side { width: 300dp; }
+.dock-open .su-players { padding: 14dp 14dp 12dp 14dp; }
+.dock-open .su-fill .overline { display: none; }
+.screen.dock-open .su-fill button { padding: 0 8dp; margin-left: 4dp; font-size: 14dp; }
+.dock-open .prow { flex-wrap: wrap; height: auto; padding: 8dp; }
+.dock-open .prow.empty { height: auto; }
+.dock-open .prow-who { flex: 1 0 70%; width: auto; margin-right: 0; }
+.dock-open .prow > .prow-army { flex: 1 1 0%; min-width: 150dp; margin: 8dp 0 0 42dp; }
+.dock-open .prow .team-seg { margin-top: 8dp; }
+.dock-open .prow-spot { margin-top: 8dp; }
+.screen.dock-open .prow .team-seg button.seg-item { flex-basis: 28dp; width: 28dp; font-size: 15dp; }
+.screen.dock-open .prow .team-seg button.seg-item:first-child { flex-basis: 48dp; width: 48dp; }
+.dock-open .prow-badge { display: none; }
+.dock-open .prow-add { flex: 1 1 100%; justify-content: flex-end; margin-top: 6dp; }
+.dock-open .prow-add .overline { display: none; }
+.screen.dock-open .prow-add button { padding: 0 8dp; margin-left: 4dp; font-size: 14dp; }
+.dock-open .prow-pop { margin-left: 8dp; }
+.screen.dock-open .prow-pop .swatches button.swatch { width: 26dp; height: 26dp; margin-right: 1dp; }
+.dock-open .prow-pop .swatch .chip { line-height: 18dp; font-size: 13dp; }
+.dock-open .prow-pop .swatch.random .chip { line-height: 16dp; }
+.dock-open .prow-pop-name { display: none; }
+.screen.dock-open .su-rules .cash-seg button.seg-item { padding: 0 2dp; font-size: 15dp; letter-spacing: 0; }
+
+@media (max-aspect-ratio: 3/2)
+{
+	.conn { padding: 0 5dp; }
+	
+	.dock-open .su-map-col { flex-basis: 200dp; width: 200dp; }
+	.dock-open .su-hero { padding: 12dp 10dp 14dp 10dp; }
+	.dock-open .su-hero .map-frame { width: 180dp; }
+	.dock-open .su-map-name { font-size: 19dp; line-height: 24dp; }
+	.dock-open .su-side { width: 240dp; }
+	.dock-open .su-players { padding: 12dp 10dp 10dp 10dp; }
+	.dock-open .su-players-head { flex-wrap: wrap; height: auto; }
+	.dock-open .su-fill { margin: 6dp 0 0 0; }
+	.dock-open .prow > .prow-army { min-width: 110dp; margin-left: 0; }
+	.screen.dock-open .prow .team-seg button.seg-item { flex-basis: 24dp; width: 24dp; font-size: 14dp; }
+	.screen.dock-open .prow .team-seg button.seg-item:first-child { flex-basis: 42dp; width: 42dp; font-size: 12dp; }
+	.dock-open .prow-spot { width: 32dp; margin-left: 6dp; }
+	.dock-open .prow .team-seg { margin-left: 6dp; }
+	.screen.dock-open .su-rules .cash-seg button.seg-item { font-size: 13dp; }
+}

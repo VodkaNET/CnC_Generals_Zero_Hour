@@ -1,0 +1,17 @@
+
+
+body.ld
+{
+	font-size: 20dp;
+}
+
+
+.ld-head .ld-timeout
+{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	align-self: stretch;
+	padding: 0 26dp 0 22dp;
+	border-left: 4dp #D1FD04;
+}

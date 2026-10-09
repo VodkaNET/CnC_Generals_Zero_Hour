@@ -26,11 +26,40 @@
 				<button class="rail-item hq-brackets" data-class-on="tab == 'audio'" data-class-selected="tab == 'audio'" data-event-click="select_audio"><gametext key="GUI:Audio"/><span class="hq-scan"></span><span class="hq-br hq-br-tl"></span><span class="hq-br hq-br-tr"></span><span class="hq-br hq-br-bl"></span><span class="hq-br hq-br-br"></span></button>
 				<button class="rail-item hq-brackets" data-class-on="tab == 'controls'" data-class-selected="tab == 'controls'" data-event-click="select_controls"><gametext key="GO:GUI:OptionsControls"/><span class="hq-scan"></span><span class="hq-br hq-br-tl"></span><span class="hq-br hq-br-tr"></span><span class="hq-br hq-br-bl"></span><span class="hq-br hq-br-br"></span></button>
 				<button class="rail-item hq-brackets" data-class-on="tab == 'network'" data-class-selected="tab == 'network'" data-event-click="select_network"><gametext key="GUI:Network"/><span class="hq-scan"></span><span class="hq-br hq-br-tl"></span><span class="hq-br hq-br-tr"></span><span class="hq-br hq-br-bl"></span><span class="hq-br hq-br-br"></span></button>
+				<button class="rail-item hq-brackets" data-class-on="tab == 'interface'" data-class-selected="tab == 'interface'" data-event-click="select_interface">Interface<span class="hq-scan"></span><span class="hq-br hq-br-tl"></span><span class="hq-br hq-br-tr"></span><span class="hq-br hq-br-bl"></span><span class="hq-br hq-br-br"></span></button>
 			</div>
 
 			<!-- One label/control row per setting, its tooltip text under the label. Only the active
 			     category is laid out. -->
 			<div class="surface opt-panel">
+				<div class="opt-page scroll-container" data-if="tab == 'interface'">
+					<div class="opt-head">Interface</div>
+					<div class="opt-row">
+						<div class="opt-text"><div class="opt-label">Interface Scale</div><div class="opt-desc">100% is the current size. Shrink text and controls down to 50%.</div></div>
+						<div class="opt-control opt-slider"><input class="range" type="range" min="50" max="100" step="5" data-value="ui_scale"/><div class="opt-value">{{ui_scale}}%</div></div>
+					</div>
+					<div class="opt-row">
+						<div class="opt-text"><div class="opt-label">Theme</div><div class="opt-desc">Base appearance for RmlUi screens.</div></div>
+						<div class="opt-control"><select data-value="ui_theme"><option value="0">Blue (Default)</option><option value="1">Dark</option></select></div>
+					</div>
+					<div class="opt-row">
+						<div class="opt-text"><div class="opt-label">Custom Theme</div><div class="opt-desc">Optional .rcss overrides from UI/Themes.</div></div>
+						<div class="opt-control"><select id="select_custom_theme" data-value="custom_theme_index"/></div>
+					</div>
+					<label class="opt-row">
+						<div class="opt-text"><div class="opt-label">Enable Background</div><div class="opt-desc">Use a custom image behind the menu panels.</div></div>
+						<div class="opt-control"><input class="checkbox" type="checkbox" data-checked="interface_background"/></div>
+					</label>
+					<div class="opt-row" data-if="interface_background">
+						<div class="opt-text"><div class="opt-label">Background Image</div><div class="opt-desc">PNG or JPG from UI/Backgrounds, or select a file.</div></div>
+						<div class="opt-control"><select id="select_background" data-value="background_index" data-event-change="background_changed"/><button class="btn-small interface-browse" data-event-click="browse_background">Browse...</button><div class="interface-path" data-if="background_path != ''">{{background_path}}</div></div>
+					</div>
+					<label class="opt-row">
+						<div class="opt-text"><div class="opt-label">Hide UI border</div><div class="opt-desc">Hide the decorative outer ruler and corner markers.</div></div>
+						<div class="opt-control"><input class="checkbox" type="checkbox" data-checked="hide_ui_border"/></div>
+					</label>
+					<div class="interface-error" data-if="interface_error != ''">{{interface_error}}</div>
+				</div>
 				<!-- Display: resolution, brightness, anti-aliasing, texture filtering, anisotropy -->
 				<div class="opt-page scroll-container" data-if="tab == 'video'">
 					<div class="opt-head"><gametext key="GO:GUI:OptionsDisplay"/></div>

@@ -1,0 +1,66 @@
+
+
+.pi-card
+{
+	width: 900dp;
+}
+
+.pi-body
+{
+	padding-top: 20dp;
+}
+
+
+.pi-honors-title
+{
+	margin-top: 22dp;
+}
+
+.pi-honors
+{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	margin-top: 10dp;
+	padding: 8dp;
+	background-color: #0E0F10C8;
+	border: 1dp #898A8B1E;
+}
+
+.pi-honor
+{
+	position: relative;
+	width: 58dp;
+	height: 58dp;
+	margin: 3dp;
+}
+
+.pi-honor.disabled
+{
+	opacity: 0.25;
+}
+
+.pi-honor-icon
+{
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.pi-honor-count
+{
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	padding: 0 4dp;
+	font-size: 14dp;
+	line-height: 17dp;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #0E0F10C8;
+}
+
+@media (max-aspect-ratio: 3/2)
+{
+	.pi-card { width: 820dp; }
+}

@@ -1,0 +1,107 @@
+
+
+.dc-body
+{
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.dc-card
+{
+	display: flex;
+	flex-direction: column;
+	flex: 0 1 auto;
+	box-sizing: border-box;
+	width: 760dp;
+	min-height: 0;
+	padding: 30dp 40dp 34dp 40dp;
+	border-top: 4dp #777879;
+}
+
+.dc-field
+{
+	display: flex;
+	flex-direction: column;
+	flex: 0 0 auto;
+}
+
+.dc-label
+{
+	margin-bottom: 10dp;
+}
+
+.dc-input
+{
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+}
+
+
+.dc-local
+{
+	display: block;
+	flex: 0 0 auto;
+	margin-top: 26dp;
+	padding: 18dp 22dp;
+	background-color: #0E0F10B4;
+	border-left: 4dp #4D4E4F;
+}
+
+.dc-local .dc-label
+{
+	margin-bottom: 4dp;
+}
+
+.dc-ip
+{
+	display: block;
+	font-size: 38dp;
+	line-height: 46dp;
+	font-weight: bold;
+	letter-spacing: 1dp;
+	color: #FFFFFF;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.dc-remote
+{
+	flex: 0 1 auto;
+	min-height: 0;
+	margin-top: 26dp;
+}
+
+
+.dc-history
+{
+	display: block;
+	flex: 0 1 auto;
+	min-height: 0;
+	max-height: 264dp;
+	overflow-y: auto;
+	margin-top: 8dp;
+}
+
+.dc-history-row
+{
+	display: block;
+	line-height: 42dp;
+	color: #DCDDDE;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.dc-history-row.selected
+{
+	color: #FFFFFF;
+	font-weight: bold;
+}
+
+@media (max-aspect-ratio: 3/2)
+{
+	.dc-card { width: 640dp; }
+}

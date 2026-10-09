@@ -1,0 +1,422 @@
+
+
+
+.details-col
+{
+	width: 440dp;
+}
+
+
+.details
+{
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 0%;
+	min-height: 0;
+}
+
+.players
+{
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 0%;
+	min-height: 0;
+}
+
+.room-select
+{
+	width: 300dp;
+}
+
+
+.room-select selectbox
+{
+	min-width: 380dp;
+}
+
+
+.games
+{
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 0%;
+	min-height: 0;
+	padding-bottom: 10dp;
+}
+
+.toolbar
+{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	flex: 0 0 auto;
+	flex-wrap: wrap;
+	margin-bottom: 4dp;
+}
+
+.toolbar .seg, .toolbar .icon-btn
+{
+	margin-bottom: 10dp;
+}
+
+.screen .toolbar .icon-btn
+{
+	width: 45dp;
+	height: 45dp;
+	padding: 6dp;
+	margin-right: 15dp;
+	background-color: #0E0F10C8;
+	border: 1dp #898A8B28;
+}
+
+.screen .toolbar .icon-btn:hover
+{
+	border-color: #898A8B;
+	background-color: #3D3E3F78;
+}
+
+.game-list
+{
+	flex: 1 1 0%;
+	min-height: 0;
+	overflow-y: auto;
+}
+
+.game-row
+{
+	color: #DCDDDE;
+}
+
+.game-row.buddy
+{
+	color: #959697;
+}
+
+.game-row.crcmismatch
+{
+	color: #707172;
+}
+
+.game-lock
+{
+	flex: 0 0 23dp;
+	height: 20dp;
+	margin-right: 10dp;
+}
+
+.game-lock mappedimage
+{
+	display: block;
+	width: 20dp;
+	height: 20dp;
+}
+
+
+.game-name
+{
+	flex: 3 1 0%;
+	min-width: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.game-row.selected .game-name
+{
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+.game-map
+{
+	flex: 2 1 0%;
+	min-width: 0;
+	max-width: 250dp;
+	margin-left: 15dp;
+	color: #B1B2B3;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.game-flags
+{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	flex: 0 0 58dp;
+	margin-left: 10dp;
+	opacity: 0.8;
+}
+
+.flag-observers
+{
+	width: 28dp;
+	height: 19dp;
+	margin-right: 8dp;
+}
+
+.flag-stats
+{
+	width: 15dp;
+	height: 15dp;
+}
+
+.game-players
+{
+	flex: 0 0 52dp;
+	text-align: right;
+	font-weight: bold;
+	color: #F1F2F3;
+}
+
+.game-players.almost-full
+{
+	color: #36D8B2;
+}
+
+.game-players.full
+{
+	color: #FF5050;
+}
+
+
+.signal
+{
+	display: flex;
+	flex-direction: row;
+	align-items: flex-end;
+	flex: 0 0 auto;
+	height: 18dp;
+	margin-left: 20dp;
+}
+
+.bar
+{
+	width: 4dp;
+	margin-left: 2dp;
+	background-color: #36D8B2;
+}
+
+.b1 { height: 8dp; }
+.b2 { height: 13dp; }
+.b3 { height: 18dp; }
+
+.signal.ok .bar { background-color: #E8D440; }
+.signal.ok .b3 { background-color: #FFFFFF26; }
+.signal.bad .bar { background-color: #FF5050; }
+.signal.bad .b2, .signal.bad .b3 { background-color: #FFFFFF26; }
+
+
+.game-row mappedimage img, .tag mappedimage img
+{
+	display: block;
+}
+
+
+.chat-panel
+{
+	display: flex;
+	flex-direction: column;
+	flex: 0 0 auto;
+	height: 220dp;
+}
+
+.chat-lines
+{
+	flex: 1 1 0%;
+	min-height: 0;
+	padding-right: 10dp;
+}
+
+.chat-row
+{
+	display: block;
+	padding: 3dp 0;
+	line-height: 25dp;
+}
+
+.chat-time
+{
+	font-size: 16dp;
+	color: #7A7B7C;
+	margin-right: 10dp;
+}
+
+.chat-name
+{
+	font-weight: bold;
+	margin-right: 10dp;
+}
+
+.chat-body
+{
+	color: #DCDDDE;
+}
+
+.chat-entry
+{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	flex: 0 0 auto;
+	margin-top: 13dp;
+}
+
+.chat-input
+{
+	flex: 1 1 auto;
+	margin-right: 10dp;
+}
+
+
+.detail-name
+{
+	display: block;
+	margin-top: 4dp;
+	font-size: 23dp;
+	font-weight: bold;
+	color: #FFFFFF;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.detail-map-name
+{
+	display: block;
+	margin-top: 2dp;
+	color: #B1B2B3;
+}
+
+.detail-head
+{
+	display: flex;
+	flex-direction: row;
+	margin-top: 16dp;
+}
+
+.detail-map
+{
+	flex: 0 0 auto;
+	width: 220dp;
+	height: 220dp;
+}
+
+
+.facts
+{
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 0%;
+	min-width: 0;
+	margin-left: 20dp;
+}
+
+.fact
+{
+	margin-bottom: 14dp;
+}
+
+.fact-value .dot
+{
+	margin-right: 8dp;
+	vertical-align: middle;
+}
+
+.dot.ok { background-color: #E8D440; }
+.dot.bad { background-color: #FF5050; }
+
+.tags
+{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	margin-top: 12dp;
+}
+
+.tag
+{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	height: 33dp;
+	padding: 0 10dp;
+	margin: 0 8dp 8dp 0;
+	font-size: 16dp;
+	color: #DCDDDE;
+	background-color: #3D3E3F50;
+}
+
+.tag mappedimage
+{
+	width: 18dp;
+	height: 18dp;
+	margin-right: 8dp;
+}
+
+
+.detail-body
+{
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+	min-height: 0;
+}
+
+.detail-head, .detail-name, .detail-map-name, .tags
+{
+	flex: 0 0 auto;
+}
+
+.members
+{
+	display: block;
+	flex: 1 1 0%;
+	min-height: 0;
+	overflow-y: auto;
+	margin-top: 13dp;
+	border-top: 1dp #898A8B28;
+	padding-top: 10dp;
+}
+
+.member
+{
+	display: block;
+	height: 33dp;
+	line-height: 33dp;
+	padding-left: 13dp;
+	border-left: 2dp #898A8B46;
+	margin-bottom: 2dp;
+	color: #DCDDDE;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.member.host
+{
+	border-left-color: #D1FD04;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+
+@media (max-aspect-ratio: 3/2)
+{
+	.details-col { width: 300dp; }
+	.detail-map { width: 140dp; height: 140dp; }
+	.facts { margin-left: 14dp; }
+	.fact { margin-bottom: 6dp; }
+	.facts .stat-label { font-size: 14dp; }
+	.fact-value { font-size: 18dp; }
+	.game-map { max-width: 163dp; }
+	.game-flags { display: none; }
+	.col-side { margin-left: 20dp; }
+}
+
+
+@media (max-aspect-ratio: 3/2)
+{
+	.dock-open .details-col { display: none; }
+}

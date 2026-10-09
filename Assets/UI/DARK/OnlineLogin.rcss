@@ -1,0 +1,22 @@
+
+
+.login-status
+{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	height: 55dp;
+	padding: 0 24dp 0 20dp;
+	font-size: 19dp;
+	font-weight: bold;
+	letter-spacing: 1dp;
+	text-transform: uppercase;
+	color: #CBCCCD;
+	background-color: #0E0F10C8;
+}
+
+.login-status .dot
+{
+	margin-right: 14dp;
+	background-color: #D1FD04;
+}

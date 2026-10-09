@@ -1,0 +1,348 @@
+
+
+
+.wc-lower
+{
+	display: flex;
+	flex-direction: row;
+	flex: 1 1 0%;
+	min-height: 0;
+}
+
+.wc-lower .surface + .surface
+{
+	margin-top: 0;
+	margin-left: 20dp;
+}
+
+.wc-news
+{
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 0%;
+	min-width: 0;
+	min-height: 0;
+}
+
+.wc-motd
+{
+	flex: 1 1 0%;
+	min-height: 0;
+	margin-top: 12dp;
+}
+
+.wc-motd-line
+{
+	display: block;
+	padding: 2dp 0 6dp 0;
+	font-size: 19dp;
+	line-height: 26dp;
+	white-space: pre-line;
+	
+}
+
+.wc-motd-line.heading
+{
+	font-weight: bold;
+	font-size: 21dp;
+}
+
+.wc-armies
+{
+	display: flex;
+	flex-direction: column;
+	flex: 0 0 600dp;
+	width: 600dp;
+	box-sizing: border-box;
+}
+
+.wc-army-grid
+{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-content: space-between;
+	flex: 1 1 0%;
+	min-height: 0;
+	margin-top: 12dp;
+}
+
+.wc-army
+{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	box-sizing: border-box;
+	width: 25%;
+	padding: 4dp 6dp;
+}
+
+.wc-army-icon
+{
+	display: block;
+	flex: 0 0 auto;
+	width: 64dp;
+	height: 64dp;
+}
+
+.wc-army-text
+{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+}
+
+.wc-army-pct
+{
+	display: block;
+	margin-top: 4dp;
+	font-size: 24dp;
+	line-height: 28dp;
+	font-weight: bold;
+	color: #F1F2F3;
+}
+
+.wc-army-count
+{
+	display: block;
+	font-size: 14dp;
+	line-height: 18dp;
+	color: #7A7B7C;
+	white-space: nowrap;
+}
+
+.wc-army-bar
+{
+	display: block;
+	width: 76%;
+	height: 4dp;
+	margin-top: 6dp;
+	background-color: #898A8B28;
+}
+
+.wc-army-fill
+{
+	display: block;
+	height: 100%;
+	background-color: #4D4E4F;
+}
+
+.wc-army:hover .wc-army-fill
+{
+	background-color: #D1FD04;
+}
+
+
+.col-side
+{
+	width: 440dp;
+}
+
+.wc-player
+{
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 0%;
+	min-height: 0;
+	padding: 24dp;
+}
+
+.wc-greeting
+{
+	display: block;
+	font-size: 22dp;
+	line-height: 28dp;
+	font-weight: bold;
+	color: #F1F2F3;
+}
+
+.wc-rank
+{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	margin-top: 20dp;
+	padding-bottom: 20dp;
+	border-bottom: 1dp #898A8B28;
+}
+
+
+.wc-portrait
+{
+	position: relative;
+	flex: 0 0 auto;
+	width: 162dp;
+	height: 162dp;
+	background-color: #0E0F10DC;
+	border: 1dp #898A8B3C;
+}
+
+.wc-rank-image
+{
+	display: block;
+	width: 152dp;
+	height: 152dp;
+	margin: 4dp;
+}
+
+.wc-badge
+{
+	display: block;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	width: 58dp;
+	height: 58dp;
+	background-color: #0E0F10F0;
+	border-top: 1dp #D1FD04;
+	border-left: 1dp #D1FD04;
+}
+
+.wc-badge mappedimage
+{
+	display: block;
+	width: 49dp;
+	height: 49dp;
+	margin: 4dp;
+}
+
+.wc-rank-info
+{
+	display: block;
+	flex: 1 1 0%;
+	min-width: 0;
+	margin-left: 26dp;
+}
+
+.wc-rank-name
+{
+	display: block;
+	margin-top: 4dp;
+	font-size: 30dp;
+	line-height: 36dp;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+.wc-progress
+{
+	margin-top: 14dp;
+}
+
+.wc-stats
+{
+	display: block;
+	flex: 1 1 0%;
+	min-height: 0;
+	margin-top: 8dp;
+}
+
+.wc-stat
+{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	height: 54dp;
+	border-bottom: 1dp #FFFFFF0A;
+}
+
+.wc-stat-label
+{
+	flex: 1 1 0%;
+	min-width: 0;
+	font-size: 18dp;
+	color: #B1B2B3;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.wc-stat-value
+{
+	flex: 0 0 auto;
+	margin-left: 12dp;
+	font-size: 22dp;
+	font-weight: bold;
+	color: #F1F2F3;
+	white-space: nowrap;
+}
+
+.screen button.wc-persona
+{
+	display: block;
+	flex: 0 0 auto;
+	width: 100%;
+	margin-top: 16dp;
+	text-align: center;
+}
+
+
+.wc-online
+{
+	display: none;
+	padding: 12dp 22dp;
+	font-size: 21dp;
+	font-weight: bold;
+	color: #F1F2F3;
+	background-color: #0E0F10C8;
+}
+
+.wc-online .dot
+{
+	margin-right: 12dp;
+	vertical-align: middle;
+}
+
+
+.screen button.wc-cta
+{
+	min-width: 300dp;
+}
+
+
+.dock-open .wc-lower { flex-direction: column; }
+.dock-open .wc-lower .surface + .surface { margin-left: 0; margin-top: 20dp; }
+.dock-open .wc-armies { flex: 0 0 auto; width: auto; padding-bottom: 12dp; }
+.dock-open .wc-army-grid { flex: 0 0 auto; }
+.dock-open .wc-army { flex-direction: row; width: 16.66%; padding: 4dp 4dp 8dp 0; }
+.dock-open .wc-army-icon { width: 44dp; height: 44dp; margin-right: 8dp; }
+.dock-open .wc-army-text { align-items: flex-start; width: auto; flex: 1 1 0%; min-width: 0; }
+.dock-open .wc-army-pct { margin-top: 0; font-size: 20dp; line-height: 22dp; }
+.dock-open .wc-army-count { font-size: 13dp; line-height: 16dp; }
+.dock-open .wc-army-bar { display: none; }
+.dock-open .col-side { width: 400dp; }
+
+@media (max-aspect-ratio: 3/2)
+{
+	.wc-online { display: block; }
+	.screen button.wc-cta { min-width: 210dp; padding: 0 30dp; }
+	.wc-lower { flex-direction: column; }
+	.wc-lower .surface + .surface { margin-left: 0; margin-top: 20dp; }
+	.wc-armies { flex: 0 0 auto; width: auto; padding-bottom: 12dp; }
+	.wc-army-grid { flex: 0 0 auto; }
+	.wc-army { flex-direction: row; width: 16.66%; padding: 4dp 4dp 8dp 0; }
+	.wc-army-icon { width: 44dp; height: 44dp; margin-right: 8dp; }
+	.wc-army-text { align-items: flex-start; width: auto; flex: 1 1 0%; min-width: 0; }
+	.wc-army-pct { margin-top: 0; font-size: 20dp; line-height: 22dp; }
+	.wc-army-count { font-size: 13dp; line-height: 16dp; }
+	.wc-army-bar { display: none; }
+	.col-side { width: 380dp; }
+	.wc-portrait { width: 122dp; height: 122dp; }
+	.wc-rank-image { width: 112dp; height: 112dp; }
+	.wc-rank-info { margin-left: 18dp; }
+	.wc-rank-name { font-size: 26dp; }
+
+	
+	.dock-open .wc-army { width: 33.33%; }
+	.dock-open .col-side { width: 300dp; }
+	.dock-open .wc-player { padding: 18dp; }
+	.dock-open .wc-greeting { font-size: 19dp; line-height: 24dp; }
+	.dock-open .wc-portrait { width: 90dp; height: 90dp; }
+	.dock-open .wc-rank-image { width: 80dp; height: 80dp; }
+	.dock-open .wc-badge { width: 38dp; height: 38dp; }
+	.dock-open .wc-badge mappedimage { width: 30dp; height: 30dp; }
+	.dock-open .wc-rank-name { font-size: 22dp; line-height: 28dp; }
+	.dock-open .wc-stat-label { font-size: 15dp; }
+	.dock-open .wc-stat-value { font-size: 17dp; }
+}

@@ -1,0 +1,296 @@
+
+
+
+.setup-body
+{
+	display: flex;
+	flex-direction: row;
+	flex: 1 1 auto;
+	min-height: 0;
+}
+
+.setup-main
+{
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 0%;
+	min-width: 0;
+	margin-right: 16dp;
+}
+
+.map-select-body
+{
+	display: flex;
+	flex-direction: row;
+	flex: 1 1 0%;
+	min-height: 0;
+}
+
+
+.slot-list
+{
+	flex: 1 1 auto;
+	margin-right: 16dp;
+	min-height: 0;
+}
+
+.map-list
+{
+	flex: 1 1 0%;
+	min-width: 0;
+	min-height: 0;
+	margin-right: 16dp;
+}
+
+.side-panel
+{
+	flex: 0 0 auto;
+	width: 384dp;
+	display: flex;
+	flex-direction: column;
+}
+
+.side-panel > button
+{
+	display: block;
+}
+
+
+.setup-lower
+{
+	display: flex;
+	flex-direction: row;
+	flex: 0 0 auto;
+	margin-top: 16dp;
+}
+
+.setup-lower > .panel-box
+{
+	flex: 1 1 0%;
+	min-width: 0;
+	max-width: 720dp;
+	margin-right: 16dp;
+}
+
+.setup-lower > .panel-box:last-child
+{
+	margin-right: 0;
+}
+
+.setup-lower .row:last-child
+{
+	margin-bottom: 0;
+}
+
+.setup-lower .row > .label
+{
+	flex-basis: 48%;
+}
+
+
+.slot-table
+{
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+	min-height: 0;
+}
+
+.slot-row
+{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	box-sizing: border-box;
+	flex: 1 1 40dp;
+	min-height: 40dp;
+	max-height: 58dp;
+	border-bottom: 1dp rgba(61, 62, 63, 80);
+}
+
+.slot-row.slot-header
+{
+	flex: 0 0 32dp;
+	min-height: 32dp;
+	height: 32dp;
+	font-size: 18dp;
+	font-weight: bold;
+	color: #898A8B;
+	border-bottom: 1dp #3D3E3F;
+}
+
+.slot-occupant, .slot-color, .slot-faction, .slot-team
+{
+	box-sizing: border-box;
+	min-width: 0;
+	margin-right: 8dp;
+}
+
+.slot-occupant { flex: 3 1 0%; }
+.slot-color { flex: 2.2 1 0%; }
+.slot-faction { flex: 3 1 0%; }
+.slot-team { flex: 1.4 1 0%; }
+
+.slot-row select
+{
+	width: 100%;
+}
+
+.slot-name
+{
+	box-sizing: border-box;
+	height: 32dp;
+	line-height: 32dp;
+	padding: 0 9dp;
+	color: #FFFFFF;
+	font-weight: bold;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+
+.slot-row.empty .slot-color,
+.slot-row.empty .slot-faction,
+.slot-row.empty .slot-team
+{
+	opacity: 0.45;
+}
+
+
+.slot-accept
+{
+	flex: 0 0 auto;
+	width: 18dp;
+	height: 18dp;
+	box-sizing: border-box;
+	border: 1dp #3D3E3F;
+	background-color: rgba(255, 255, 255, 40);
+}
+
+.slot-row.slot-header .slot-accept
+{
+	border-width: 0;
+	background-color: transparent;
+}
+
+.slot-accept.hidden
+{
+	visibility: hidden;
+}
+
+.slot-accept.accepted
+{
+	background-color: #40C040;
+	border-color: #FFFFFF;
+}
+
+
+.map-preview
+{
+	box-sizing: border-box;
+	position: relative;
+	flex: 0 0 auto;
+	width: 384dp;
+	height: 384dp;
+	border: 1dp #3D3E3F;
+	background-color: rgba(2, 2, 2, 191);
+}
+
+.map-preview-image
+{
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.map-not-found
+{
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	color: #C0C0C0;
+}
+
+.map-display-name
+{
+	flex: 0 0 auto;
+	margin: 8dp 0 12dp 0;
+	color: #C0C0C0;
+}
+
+.start-marker
+{
+	position: absolute;
+	width: 20dp;
+	height: 20dp;
+	margin-left: -10dp;
+	margin-top: -10dp;
+	text-align: center;
+}
+
+.start-marker-dot
+{
+	display: block;
+	box-sizing: border-box;
+	margin: 1dp auto 0 auto;
+	width: 18dp;
+	height: 18dp;
+	border: 2dp #FFFFFF;
+	background-color: rgba(255, 255, 255, 60);
+}
+
+.start-marker:hover .start-marker-dot
+{
+	border-color: #BAFF0C;
+}
+
+.start-marker-dot.occupied
+{
+	border-color: #898A8B;
+}
+
+.start-marker-label
+{
+	display: block;
+	margin-left: -60dp;
+	margin-right: -60dp;
+	text-align: center;
+	font-size: 13dp;
+	color: #FFFFFF;
+	font-effect: shadow(1dp 1dp #000000);
+	white-space: nowrap;
+}
+
+
+
+.map-star
+{
+	flex: 0 0 auto;
+	width: 18dp;
+	height: 18dp;
+	margin-right: 8dp;
+}
+
+.map-name
+{
+	flex: 1 1 auto;
+	color: #FFFFFF;
+}
+
+.map-players
+{
+	flex: 0 0 auto;
+	width: 40dp;
+	text-align: center;
+	color: #C0C0C0;
+}
+
+
+@media (max-aspect-ratio: 3/2)
+{
+	.dock-open .side-panel { width: 260dp; }
+	.dock-open .map-preview { width: 260dp; height: 260dp; }
+}
