@@ -707,4 +707,11 @@ void tagDocuments(const std::string &language)
 	}
 }
 
+void reloadStyles(Rml::ElementDocument *document)
+{
+    if (!document) return;
+    document->ReloadStyleSheet();
+    s_documentLanguage.OnDocumentLoad(document);
+}
+
 } // namespace RmlTextShaping

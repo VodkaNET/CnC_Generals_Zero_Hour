@@ -17,6 +17,7 @@
 */
 
 #include "W3DDevice/GameClient/RmlUi/RmlUiFileInterface.h"
+#include "W3DDevice/GameClient/RmlUi/RmlInterfaceSettings.h"
 
 #include "Common/FileSystem.h"
 #include "Common/file.h"
@@ -94,9 +95,10 @@ static std::string buildMappedImagesRcss()
 
 Rml::FileHandle RmlUiFileInterface::Open(const Rml::String &path)
 {
+	const Rml::String resource = RmlInterfaceSettings::stylePath(path);
 	if (TheFileSystem && _stricmp(path.c_str(), RmlCommonRcssPath) == 0)
 	{
-		File *real = TheFileSystem->openFile(path.c_str(), File::READ | File::BINARY);
+		File *real = TheFileSystem->openFile(resource.c_str(), File::READ | File::BINARY);
 		if (!real)
 			return 0;
 		MemFile *mem = new MemFile();
@@ -114,7 +116,7 @@ Rml::FileHandle RmlUiFileInterface::Open(const Rml::String &path)
 
 	if (!TheFileSystem)
 		return 0;
-	File *file = TheFileSystem->openFile(path.c_str(), File::READ | File::BINARY);
+	File *file = TheFileSystem->openFile(resource.c_str(), File::READ | File::BINARY);
 	return (Rml::FileHandle)file;
 }
 

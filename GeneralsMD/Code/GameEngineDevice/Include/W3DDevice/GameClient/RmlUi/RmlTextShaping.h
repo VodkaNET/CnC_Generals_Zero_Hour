@@ -27,7 +27,7 @@
 #include <string>
 #include <vector>
 
-namespace Rml { class FontEngineInterface; }
+namespace Rml { class FontEngineInterface; class ElementDocument; }
 
 namespace RmlTextShaping
 {
@@ -69,6 +69,7 @@ bool isRightToLeft(const std::string &language);
 /// dir="rtl", which the shaper reads, plus mirrored style sheets (see mirrorStyleSheet()), except the
 /// in-game HUD (ControlBar.rml), which keeps its layout and only its text is right to left.
 void tagDocuments(const std::string &language);
+void reloadStyles(Rml::ElementDocument *document);
 
 /// A right-to-left copy of an RCSS sheet, the way rtlcss mirrors CSS: left and right swap in
 /// property names (left, margin-left, border-left-width, ...) and values (text-align, float),

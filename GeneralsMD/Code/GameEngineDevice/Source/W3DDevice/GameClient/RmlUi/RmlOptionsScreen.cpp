@@ -24,12 +24,34 @@
 #include "GameClient/ShellHooks.h"
 #include "GameClient/Shell.h"
 #include "W3DDevice/GameClient/RmlUi/RmlUiManager.h"
+#include "W3DDevice/GameClient/RmlUi/RmlInterfaceSettings.h"
 
 #include <RmlUi/Core/Context.h>
 #include <RmlUi/Core/Element.h>
 #include <RmlUi/Core/ElementDocument.h>
+#include <RmlUi/Core/Elements/ElementFormControlSelect.h>
 
 #include <functional>
+#include <algorithm>
+
+namespace
+{
+int selectInterfacePath(std::vector<std::string> &paths, const std::string &path)
+{
+    if (path.empty()) return 0;
+    auto it = std::find(paths.begin(), paths.end(), path);
+    if (it == paths.end()) { paths.push_back(path); return int(paths.size()); }
+    return int(it - paths.begin()) + 1;
+}
+Rml::String interfacePathLabel(const std::string &path)
+{
+    Rml::String result;
+    for (char c : RmlInterfaceSettings::displayName(path))
+        switch (c) { case '&': result += "&amp;"; break; case '<': result += "&lt;"; break;
+            case '>': result += "&gt;"; break; case '"': result += "&quot;"; break; default: result += c; }
+    return result;
+}
+}
 
 extern void DoResolutionDialog(); // MainMenu.cpp; same resolution-change confirm dialog as the .wnd Accept handler
 
@@ -61,6 +83,14 @@ void RmlOptionsScreen::load(Rml::Context *context)
 	{
 		m_hq.bind(constructor);
 		constructor.Bind("tab", &m_model.tab);
+		constructor.Bind("ui_scale", &m_model.uiScale);
+		constructor.Bind("ui_theme", &m_model.uiTheme);
+		constructor.Bind("custom_theme_index", &m_model.customThemeIndex);
+		constructor.Bind("interface_background", &m_model.enableBackground);
+		constructor.Bind("background_index", &m_model.backgroundIndex);
+		constructor.Bind("hide_ui_border", &m_model.hideBorder);
+		constructor.Bind("interface_error", &m_model.interfaceError);
+		constructor.Bind("background_path", &m_model.backgroundPath);
 		constructor.Bind("language_filter", &m_model.languageFilter);
 		constructor.Bind("send_delay", &m_model.sendDelay);
 		constructor.Bind("scroll_speed", &m_model.scrollSpeed);
@@ -105,6 +135,9 @@ void RmlOptionsScreen::load(Rml::Context *context)
 		constructor.BindEventCallback("select_audio", &RmlOptionsScreen::onSelectAudio, this);
 		constructor.BindEventCallback("select_controls", &RmlOptionsScreen::onSelectControls, this);
 		constructor.BindEventCallback("select_network", &RmlOptionsScreen::onSelectNetwork, this);
+		constructor.BindEventCallback("select_interface", &RmlOptionsScreen::onSelectInterface, this);
+		constructor.BindEventCallback("browse_background", &RmlOptionsScreen::onBrowseBackground, this);
+		constructor.BindEventCallback("background_changed", &RmlOptionsScreen::onBackgroundChanged, this);
 		constructor.BindEventCallback("accept", &RmlOptionsScreen::onAccept, this);
 		constructor.BindEventCallback("cancel", &RmlOptionsScreen::onCancel, this);
 		constructor.BindEventCallback("defaults", &RmlOptionsScreen::onDefaults, this);
@@ -184,6 +217,17 @@ void RmlOptionsScreen::updateDetailControlsDisabled()
 
 void RmlOptionsScreen::loadCurrentValues()
 {
+	const auto &interfaceValues = RmlInterfaceSettings::current();
+	m_model.uiScale = interfaceValues.scalePercent;
+	m_model.uiTheme = interfaceValues.darkTheme ? 1 : 0;
+	m_customThemes = RmlInterfaceSettings::themeFiles();
+	m_backgroundImages = RmlInterfaceSettings::backgroundFiles();
+	m_model.customThemeIndex = selectInterfacePath(m_customThemes, interfaceValues.customTheme);
+	m_model.enableBackground = interfaceValues.enableBackground;
+	m_model.backgroundIndex = selectInterfacePath(m_backgroundImages, interfaceValues.backgroundImage);
+	m_model.backgroundPath = interfaceValues.backgroundImage;
+	m_model.hideBorder = interfaceValues.hideBorder;
+	m_model.interfaceError.clear();
 	m_model.languageFilter = OptionsValues::GetCurrentLanguageFilter();
 	m_model.sendDelay = OptionsValues::GetCurrentSendDelay();
 	m_model.scrollSpeed = OptionsValues::GetCurrentScrollSpeedPercent();
@@ -224,6 +268,14 @@ void RmlOptionsScreen::loadCurrentValues()
 
 void RmlOptionsScreen::loadDefaultValues()
 {
+	m_model.uiScale = 100;
+	m_model.uiTheme = 0;
+	m_model.customThemeIndex = 0;
+	m_model.enableBackground = false;
+	m_model.backgroundIndex = 0;
+	m_model.backgroundPath.clear();
+	m_model.hideBorder = false;
+	m_model.interfaceError.clear();
 	m_model.languageFilter = OptionsValues::GetDefaultLanguageFilter();
 	m_model.sendDelay = OptionsValues::GetDefaultSendDelay();
 	m_model.scrollSpeed = OptionsValues::GetDefaultScrollSpeedPercent();
@@ -325,6 +377,8 @@ void RmlOptionsScreen::populateSelectOptions()
 				html += "<option value=\"" + std::to_string(i) + "\">" + text + "</option>";
 		}
 		element->SetInnerRML(html);
+		if ((std::string(id) == "select_custom_theme" || std::string(id) == "select_background") && element->GetTagName() == "select")
+			static_cast<Rml::ElementFormControlSelect *>(element)->SetValue(std::to_string(selected));
 	};
 
 	fillSelect("select_resolution", OptionsValues::GetDisplayModeCount(), m_model.resolutionIndex,
@@ -362,6 +416,10 @@ void RmlOptionsScreen::populateSelectOptions()
 
 	fillSelect("select_online_ip", OptionsValues::GetIPChoiceCount(), m_model.onlineIPIndex,
 		[](int i) { return Rml::String(OptionsValues::GetIPChoiceLabel(i).str()); });
+	fillSelect("select_custom_theme", int(m_customThemes.size()) + 1, m_model.customThemeIndex,
+		[this](int i) { return i == 0 ? Rml::String("None") : interfacePathLabel(m_customThemes[i - 1]); });
+	fillSelect("select_background", int(m_backgroundImages.size()) + 1, m_model.backgroundIndex,
+		[this](int i) { return i == 0 ? Rml::String("Select an image...") : interfacePathLabel(m_backgroundImages[i - 1]); });
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -372,8 +430,47 @@ void RmlOptionsScreen::onSelectTab(const Rml::String &tab)
 		m_modelHandle.DirtyVariable("tab");
 }
 
+bool RmlOptionsScreen::saveInterfaceValues()
+{
+    RmlInterfaceSettings::Values next;
+    next.scalePercent = m_model.uiScale;
+    next.darkTheme = m_model.uiTheme == 1;
+    next.enableBackground = m_model.enableBackground;
+    next.hideBorder = m_model.hideBorder;
+    if (m_model.customThemeIndex > 0 && m_model.customThemeIndex <= int(m_customThemes.size()))
+        next.customTheme = m_customThemes[m_model.customThemeIndex - 1];
+    if (m_model.backgroundIndex > 0 && m_model.backgroundIndex <= int(m_backgroundImages.size()))
+        next.backgroundImage = m_backgroundImages[m_model.backgroundIndex - 1];
+    std::string error;
+    if (RmlInterfaceSettings::save(next, error)) return true;
+    m_model.interfaceError = error;
+    m_model.tab = "interface";
+    if (m_modelHandle) m_modelHandle.DirtyAllVariables();
+    return false;
+}
+
+void RmlOptionsScreen::onBrowseBackground(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &)
+{
+    const std::string path = RmlInterfaceSettings::browseBackground();
+    if (path.empty()) return;
+    m_model.backgroundIndex = selectInterfacePath(m_backgroundImages, path);
+    m_model.backgroundPath = path;
+    m_model.interfaceError.clear();
+    populateSelectOptions();
+    if (m_modelHandle) m_modelHandle.DirtyAllVariables();
+}
+
+void RmlOptionsScreen::onBackgroundChanged(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &)
+{
+    m_model.backgroundPath = m_model.backgroundIndex > 0 && m_model.backgroundIndex <= int(m_backgroundImages.size())
+        ? m_backgroundImages[m_model.backgroundIndex - 1] : std::string();
+    m_model.interfaceError.clear();
+    if (m_modelHandle) m_modelHandle.DirtyAllVariables();
+}
+
 void RmlOptionsScreen::onAccept(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &)
 {
+	if (!saveInterfaceValues()) return;
 	const bool resolutionChanged = applyAndSave();
 	hide();
 	if (TheShell)

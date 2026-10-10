@@ -17,6 +17,7 @@
 */
 
 #include "W3DDevice/GameClient/RmlUi/RmlUiRenderInterface.h"
+#include "W3DDevice/GameClient/RmlUi/RmlInterfaceSettings.h"
 
 #include "Common/FileSystem.h"
 #include "Common/file.h"
@@ -506,15 +507,21 @@ Rml::TextureHandle RmlUiRenderInterface::loadMappedTexture(Rml::Vector2i &dimens
 
 Rml::TextureHandle RmlUiRenderInterface::loadStbTexture(Rml::Vector2i &dimensions, const Rml::String &path)
 {
-	File *file = TheFileSystem ? TheFileSystem->openFile(path.c_str(), File::READ | File::BINARY) : nullptr;
-	if (!file)
-		return 0;
-
 	std::vector<unsigned char> bytes;
-	bytes.resize((size_t)file->size());
-	if (!bytes.empty())
-		file->read(&bytes[0], (Int)bytes.size());
-	file->close();
+	const size_t separator = path.find_last_of("/\\");
+	const Rml::String filename = path.substr(separator == Rml::String::npos ? 0 : separator + 1);
+	if (filename.rfind("interface-background-", 0) == 0)
+	{
+		if (!RmlInterfaceSettings::readBackground(bytes)) return 0;
+	}
+	else
+	{
+		File *file = TheFileSystem ? TheFileSystem->openFile(path.c_str(), File::READ | File::BINARY) : nullptr;
+		if (!file) return 0;
+		bytes.resize((size_t)file->size());
+		if (!bytes.empty()) file->read(&bytes[0], (Int)bytes.size());
+		file->close();
+	}
 
 	int w = 0, h = 0, channels = 0;
 	unsigned char *pixels = stbi_load_from_memory(bytes.empty() ? nullptr : &bytes[0], (int)bytes.size(), &w, &h, &channels, 4);

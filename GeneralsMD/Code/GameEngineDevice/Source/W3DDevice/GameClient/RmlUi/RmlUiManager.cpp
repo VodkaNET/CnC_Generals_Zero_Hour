@@ -17,6 +17,7 @@
 */
 
 #include "W3DDevice/GameClient/RmlUi/RmlUiManager.h"
+#include "W3DDevice/GameClient/RmlUi/RmlInterfaceSettings.h"
 #include "W3DDevice/GameClient/RmlUi/RmlChatInput.h"
 #include "W3DDevice/GameClient/RmlUi/RmlInterfaceArea.h"
 
@@ -305,7 +306,7 @@ void RmlUiManager::init(int width, int height)
 	// dp units scale off a 1080p baseline so common.rcss's spacing/sizes stay consistent
 	// across resolutions and aspect ratios (see report for the palette this backs).
 	if (m_context)
-		m_context->SetDensityIndependentPixelRatio(height / 1080.0f);
+		m_context->SetDensityIndependentPixelRatio(height / 1080.0f * RmlInterfaceSettings::current().scalePercent / 100.0f);
 
 	registerCustomElements();
 
@@ -473,6 +474,7 @@ void RmlUiManager::registerCustomElements()
 
 void RmlUiManager::shutdown()
 {
+	RmlInterfaceSettings::reset();
 	if (!m_initialized)
 		return;
 
@@ -523,7 +525,7 @@ void RmlUiManager::onResize(int width, int height)
 	if (m_context)
 	{
 		m_context->SetDimensions(Rml::Vector2i(width, height));
-		m_context->SetDensityIndependentPixelRatio(height / 1080.0f);
+		m_context->SetDensityIndependentPixelRatio(height / 1080.0f * RmlInterfaceSettings::current().scalePercent / 100.0f);
 	}
 }
 
@@ -556,6 +558,7 @@ void RmlUiManager::update()
 	RmlUiMessageBoxHook::raise(); // a box stays above screens shown after it
 	RmlSocialDock::instance().tick(); // after the screen's update, before layout: shows, hides and places the dock
 	RmlInterfaceArea::apply(m_context, OptionsValues::GetCurrentInterfaceWidth()); // Options > Display > Interface Width, live
+	RmlInterfaceSettings::apply(m_context, m_width, m_height);
 	if (m_context)
 		m_context->Update();
 	endHoverOverWorld();

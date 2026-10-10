@@ -33,6 +33,7 @@
 
 #include <RmlUi/Core/DataModelHandle.h>
 #include <RmlUi/Core/Types.h>
+#include "W3DDevice/GameClient/RmlUi/RmlInterfacePlatform.h"
 
 class OptionPreferences;
 
@@ -65,6 +66,9 @@ private:
 	void populateSelectOptions();  // fills the resolution/detail/IP <select> children (dynamic lists)
 	void loadDetailPresetValues(const OptionsValues::DetailPresetValues &values); // maps into m_model, no logic
 	void updateDetailControlsDisabled();
+	bool saveInterfaceValues();
+	void onBrowseBackground(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &);
+	void onBackgroundChanged(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &);
 
 	void onSelectTab(const Rml::String &tab);
 	void onAccept(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &);
@@ -75,6 +79,7 @@ private:
 	void onSelectAudio(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &) { onSelectTab("audio"); }
 	void onSelectControls(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &) { onSelectTab("controls"); }
 	void onSelectNetwork(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &) { onSelectTab("network"); }
+	void onSelectInterface(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &) { onSelectTab("interface"); }
 
 	// Detail preset <-> Custom, mirrors showDetailPreset()/switchDetailToCustom() exactly.
 	void onDetailLevelChanged(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &);
@@ -87,12 +92,23 @@ private:
 	RmlHqStatus m_hq; // .hq-header status
 	OptionPreferences *m_pref = nullptr;
 	bool m_applyingDetailPreset = false; // suppresses onDetailControlChanged while previewing a preset
+	RmlInterfacePlatform::Paths m_customThemes;
+	RmlInterfacePlatform::Paths m_backgroundImages;
 
 	// Data model fields, bound by pointer in load(). Kept as plain members (like the .wnd
 	// version's GameWindow state) so Bind() has stable addresses for the document's lifetime.
 	struct Model
 	{
 		Rml::String tab = "video";
+
+		int uiScale = 100;
+		int uiTheme = 0;
+		int customThemeIndex = 0;
+		bool enableBackground = false;
+		int backgroundIndex = 0;
+		bool hideBorder = false;
+		Rml::String interfaceError;
+		Rml::String backgroundPath;
 
 		bool languageFilter = true;
 		bool sendDelay = false;
