@@ -868,6 +868,11 @@ void StartPatchCheck()
 	// TODO_NGMP: Uninit this when leaving MP, waste of resources and cycles
 	NGMP_OnlineServicesManager::GetInstance()->Init();
 
+#if defined(GENERALS_ONLINE) && defined(GO_UI_PREVIEW)
+    mustDownloadPatch = FALSE;
+    DEBUG_LOG(("Online UI preview: skipping client anticheat and version checks."));
+    startOnline();
+#else
     // if we have an AC plugin loaded but the AC external process isnt running, show an error message
     if (AnticheatPlugInterface::IsPluginLoaded())
     {
@@ -988,6 +993,7 @@ void StartPatchCheck()
 		break;
 	}
 	*/
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
