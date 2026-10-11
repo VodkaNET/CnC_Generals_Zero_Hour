@@ -765,6 +765,14 @@ void AudioManager::setVolume( Real volume, AudioAffect whichToAffect )
 }
 
 //-------------------------------------------------------------------------------------------------
+Real AudioManager::getSystemVolume(AudioAffect whichToGet) const
+{
+    if (whichToGet & AudioAffect_Music) return m_systemMusicVolume;
+    if (whichToGet & AudioAffect_Sound) return m_systemSoundVolume;
+    if (whichToGet & AudioAffect_Sound3D) return m_systemSound3DVolume;
+    return m_systemSpeechVolume;
+}
+
 Real AudioManager::getVolume( AudioAffect whichToGet )
 {
 	if (whichToGet & AudioAffect_Music) {

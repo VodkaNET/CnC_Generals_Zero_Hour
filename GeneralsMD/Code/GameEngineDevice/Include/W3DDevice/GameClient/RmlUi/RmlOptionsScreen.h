@@ -67,6 +67,9 @@ private:
 	void loadDetailPresetValues(const OptionsValues::DetailPresetValues &values); // maps into m_model, no logic
 	void updateDetailControlsDisabled();
 	bool saveInterfaceValues();
+	int m_initialMusicVolume = 0;
+	int m_initialSfxVolume = 0;
+	int m_initialVoiceVolume = 0;
 	void onBrowseBackground(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &);
 	void onBackgroundChanged(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &);
 

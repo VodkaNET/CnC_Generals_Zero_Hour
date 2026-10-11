@@ -237,9 +237,9 @@ Bool GetCurrentAlternateMouse() { return TheGlobalData->m_useAlternateMouse; }
 Bool GetCurrentRetaliation() { return TheGlobalData->m_clientRetaliationModeEnabled; }
 Bool GetCurrentDoubleClickAttackMove() { return TheGlobalData->m_doubleClickAttackMove; }
 Int GetCurrentScrollSpeedPercent() { return (Int)(TheGlobalData->m_keyboardScrollFactor * 100.0f); }
-Int GetCurrentMusicVolumePercent() { return REAL_TO_INT(TheAudio->getVolume(AudioAffect_Music) * 100.0f); }
-Int GetCurrentSFXVolumePercent() { return REAL_TO_INT(TheAudio->getVolume(AudioAffect_Sound) * 100.0f); }
-Int GetCurrentVoiceVolumePercent() { return REAL_TO_INT(TheAudio->getVolume(AudioAffect_Speech) * 100.0f); }
+Int GetCurrentMusicVolumePercent() { return REAL_TO_INT(TheAudio->getSystemVolume(AudioAffect_Music) * 100.0f); }
+Int GetCurrentSFXVolumePercent() { return REAL_TO_INT(MAX(TheAudio->getSystemVolume(AudioAffect_Sound), TheAudio->getSystemVolume(AudioAffect_Sound3D)) * 100.0f); }
+Int GetCurrentVoiceVolumePercent() { return REAL_TO_INT(TheAudio->getSystemVolume(AudioAffect_Speech) * 100.0f); }
 Int GetCurrentBrightnessPercent(OptionPreferences &pref) { return REAL_TO_INT(pref.getGammaValue()); }
 
 //-------------------------------------------------------------------------------------------------

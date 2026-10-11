@@ -239,6 +239,7 @@ class AudioManager : public SubsystemInterface
 		// Set and get the device Volume
 		virtual void setVolume( Real volume, AudioAffect whichToAffect );
 		virtual Real getVolume( AudioAffect whichToGet );
+		Real getSystemVolume(AudioAffect whichToGet) const;
 
 		// To get a more 3-D feeling from the universe, we adjust the volume of the 3-D samples based
 		// on zoom.
