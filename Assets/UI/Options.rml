@@ -34,10 +34,32 @@
 			<div class="surface opt-panel">
 				<div class="opt-page scroll-container" data-if="tab == 'interface'">
 					<div class="opt-head">Interface</div>
+					<div class="opt-head interface-category">General UI</div>
 					<div class="opt-row">
 						<div class="opt-text"><div class="opt-label">Interface Scale</div><div class="opt-desc">100% is the current size. Shrink menu text and controls down to 50%.</div></div>
 						<div class="opt-control opt-slider"><input class="range" type="range" min="50" max="100" step="5" data-value="ui_scale"/><div class="opt-value">{{ui_scale}}%</div></div>
 					</div>
+					<div class="opt-row">
+						<div class="opt-text"><div class="opt-label">Theme</div><div class="opt-desc">Base appearance for RmlUi screens.</div></div>
+						<div class="opt-control"><select data-value="ui_theme"><option value="0">Blue (Default)</option><option value="1">Dark</option></select></div>
+					</div>
+					<div class="opt-row">
+						<div class="opt-text"><div class="opt-label">Custom Theme</div><div class="opt-desc">Optional .rcss overrides from UI/Themes.</div></div>
+						<div class="opt-control"><select id="select_custom_theme" data-value="custom_theme_index"/></div>
+					</div>
+					<label class="opt-row">
+						<div class="opt-text"><div class="opt-label">Enable Background</div><div class="opt-desc">Use a custom image behind the menu panels.</div></div>
+						<div class="opt-control"><input class="checkbox" type="checkbox" data-checked="interface_background"/></div>
+					</label>
+					<div class="opt-row" data-if="interface_background">
+						<div class="opt-text"><div class="opt-label">Background Image</div><div class="opt-desc">PNG or JPG from UI/Backgrounds, or select a file.</div></div>
+						<div class="opt-control"><select id="select_background" data-value="background_index" data-event-change="background_changed"/><button class="btn-small interface-browse" data-event-click="browse_background">Browse...</button><div class="interface-path" data-if="background_path != ''">{{background_path}}</div></div>
+					</div>
+					<label class="opt-row">
+						<div class="opt-text"><div class="opt-label">Hide UI border</div><div class="opt-desc">Hide the decorative outer ruler and corner markers.</div></div>
+						<div class="opt-control"><input class="checkbox" type="checkbox" data-checked="hide_ui_border"/></div>
+					</label>
+					<div class="opt-head interface-category">ControlBar UI</div>
 					<div class="opt-row">
 						<div class="opt-text"><div class="opt-label">ControlBar Scale</div><div class="opt-desc">Scale the in-game HUD independently from menus. 100% to 50%.</div></div>
 						<div class="opt-control opt-slider"><input class="range" type="range" min="50" max="100" step="5" data-value="controlbar_scale"/><div class="opt-value">{{controlbar_scale}}%</div></div>
@@ -66,26 +88,6 @@
 						<div class="opt-text"><div class="opt-label">Production Progress</div><div class="opt-desc">Choose the progress overlay for production and cooldown icons.</div></div>
 						<div class="opt-control"><select data-value="production_progress_style"><option value="0">Shutter (Default)</option><option value="1">Classic Radial</option></select></div>
 					</div>
-					<div class="opt-row">
-						<div class="opt-text"><div class="opt-label">Theme</div><div class="opt-desc">Base appearance for RmlUi screens.</div></div>
-						<div class="opt-control"><select data-value="ui_theme"><option value="0">Blue (Default)</option><option value="1">Dark</option></select></div>
-					</div>
-					<div class="opt-row">
-						<div class="opt-text"><div class="opt-label">Custom Theme</div><div class="opt-desc">Optional .rcss overrides from UI/Themes.</div></div>
-						<div class="opt-control"><select id="select_custom_theme" data-value="custom_theme_index"/></div>
-					</div>
-					<label class="opt-row">
-						<div class="opt-text"><div class="opt-label">Enable Background</div><div class="opt-desc">Use a custom image behind the menu panels.</div></div>
-						<div class="opt-control"><input class="checkbox" type="checkbox" data-checked="interface_background"/></div>
-					</label>
-					<div class="opt-row" data-if="interface_background">
-						<div class="opt-text"><div class="opt-label">Background Image</div><div class="opt-desc">PNG or JPG from UI/Backgrounds, or select a file.</div></div>
-						<div class="opt-control"><select id="select_background" data-value="background_index" data-event-change="background_changed"/><button class="btn-small interface-browse" data-event-click="browse_background">Browse...</button><div class="interface-path" data-if="background_path != ''">{{background_path}}</div></div>
-					</div>
-					<label class="opt-row">
-						<div class="opt-text"><div class="opt-label">Hide UI border</div><div class="opt-desc">Hide the decorative outer ruler and corner markers.</div></div>
-						<div class="opt-control"><input class="checkbox" type="checkbox" data-checked="hide_ui_border"/></div>
-					</label>
 					<div class="interface-error" data-if="interface_error != ''">{{interface_error}}</div>
 				</div>
 				<!-- Display: resolution, brightness, anti-aliasing, texture filtering, anisotropy -->

@@ -247,3 +247,12 @@ label.opt-toggle:hover .opt-label
 	flex: 1 1 0%;
 	white-space: normal;
 }
+
+.opt-head.interface-category
+{
+    margin-top: 20dp;
+    padding: 10dp 0 12dp 0;
+    font-size: 18dp;
+    line-height: 26dp;
+    letter-spacing: 1dp;
+}
