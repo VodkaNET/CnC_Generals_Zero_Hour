@@ -35,8 +35,36 @@
 				<div class="opt-page scroll-container" data-if="tab == 'interface'">
 					<div class="opt-head">Interface</div>
 					<div class="opt-row">
-						<div class="opt-text"><div class="opt-label">Interface Scale</div><div class="opt-desc">100% is the current size. Shrink text and controls down to 50%.</div></div>
+						<div class="opt-text"><div class="opt-label">Interface Scale</div><div class="opt-desc">100% is the current size. Shrink menu text and controls down to 50%.</div></div>
 						<div class="opt-control opt-slider"><input class="range" type="range" min="50" max="100" step="5" data-value="ui_scale"/><div class="opt-value">{{ui_scale}}%</div></div>
+					</div>
+					<div class="opt-row">
+						<div class="opt-text"><div class="opt-label">ControlBar Scale</div><div class="opt-desc">Scale the in-game HUD independently from menus. 100% to 50%.</div></div>
+						<div class="opt-control opt-slider"><input class="range" type="range" min="50" max="100" step="5" data-value="controlbar_scale"/><div class="opt-value">{{controlbar_scale}}%</div></div>
+					</div>
+					<div class="opt-row">
+						<div class="opt-text"><div class="opt-label">Show Energy Numbers</div><div class="opt-desc">Show used / available energy in the center of the ControlBar energy meter.</div></div>
+						<div class="opt-control"><input class="checkbox" type="checkbox" data-checked="show_energy_numbers"/></div>
+					</div>
+					<div class="opt-row">
+						<div class="opt-text"><div class="opt-label">Show Unit Name</div><div class="opt-desc">Show the selected unit or building name above the portrait.</div></div>
+						<div class="opt-control"><input class="checkbox" type="checkbox" data-checked="show_unit_name"/></div>
+					</div>
+					<div class="opt-row">
+						<div class="opt-text"><div class="opt-label">Show General Rank</div><div class="opt-desc">Show the five general rank stars above the portrait. The experience meter remains visible.</div></div>
+						<div class="opt-control"><input class="checkbox" type="checkbox" data-checked="show_general_rank"/></div>
+					</div>
+					<div class="opt-row">
+						<div class="opt-text"><div class="opt-label">Show Promotion Points</div><div class="opt-desc">Show available promotion points on the general's button.</div></div>
+						<div class="opt-control"><input class="checkbox" type="checkbox" data-checked="show_promotion_points"/></div>
+					</div>
+					<div class="opt-row">
+						<div class="opt-text"><div class="opt-label">Show Icon Hotkeys</div><div class="opt-desc">Show keyboard shortcut labels on ControlBar icons.</div></div>
+						<div class="opt-control"><input class="checkbox" type="checkbox" data-checked="show_icon_hotkeys"/></div>
+					</div>
+					<div class="opt-row">
+						<div class="opt-text"><div class="opt-label">Production Progress</div><div class="opt-desc">Choose the progress overlay for production and cooldown icons.</div></div>
+						<div class="opt-control"><select data-value="production_progress_style"><option value="0">Shutter (Default)</option><option value="1">Classic Radial</option></select></div>
 					</div>
 					<div class="opt-row">
 						<div class="opt-text"><div class="opt-label">Theme</div><div class="opt-desc">Base appearance for RmlUi screens.</div></div>
