@@ -18,6 +18,7 @@
 
 #include "W3DDevice/GameClient/RmlUi/RmlUiElements.h"
 #include "W3DDevice/GameClient/RmlUi/RmlUiRenderInterface.h"
+#include "W3DDevice/GameClient/RmlUi/RmlInterfaceSettings.h"
 
 #include "Common/AsciiString.h"
 #include "Common/UnicodeUtf8.h"
@@ -39,6 +40,7 @@
 #include <RmlUi/Core/Variant.h>
 
 #include <algorithm>
+#include <cmath>
 #include <cstdio>
 #include <map>
 #include <windows.h>
@@ -537,4 +539,48 @@ void RmlProductionClockElement::OnRender()
         else
             TheDisplay->drawRectClock(clock.x, clock.y, clock.width, clock.height, clock.progress, clock.colour);
     }, &clock);
+}
+
+void RmlLoadBackdropElement::OnRender()
+{
+    Rml::Element::OnRender();
+    const auto size = GetBox().GetSize(Rml::BoxArea::Content);
+    const bool dark = RmlInterfaceSettings::current().darkTheme;
+    if (size.x <= 0 || size.y <= 0) return;
+    if (!m_geometry || m_size != size || m_dark != dark)
+    {
+        m_size = size;
+        m_dark = dark;
+        const int columns = 64, rows = 36;
+        Rml::Mesh mesh;
+        for (int y = 0; y <= rows; ++y)
+            for (int x = 0; x <= columns; ++x)
+            {
+                const float u = float(x) / columns, v = float(y) / rows;
+                const float shade = std::clamp((u * 0.35f + v * 0.65f) / 0.72f, 0.0f, 1.0f);
+                const float glow = std::exp(-3.5f * ((u - 0.8f) * (u - 0.8f) / 0.16f + v * v / 0.15f));
+                const Rml::Colourb upper = dark ? Rml::Colourb(32, 33, 35) : Rml::Colourb(24, 31, 58);
+                const Rml::Colourb lower = dark ? Rml::Colourb(12, 13, 14) : Rml::Colourb(5, 9, 20);
+                const Rml::Colourb highlight = dark ? Rml::Colourb(51, 52, 54) : Rml::Colourb(48, 59, 101);
+                const auto channel = [shade, glow](int upper, int lower, int highlight) {
+                    const float base = upper + (lower - upper) * shade;
+                    return Rml::byte(std::clamp(std::round(base + (highlight - base) * glow), 0.0f, 255.0f));
+                };
+                Rml::Vertex vertex;
+                vertex.position = {u * size.x, v * size.y};
+                vertex.tex_coord = {0.0f, 0.0f};
+                vertex.colour = Rml::Colourb(channel(upper.red, lower.red, highlight.red),
+                    channel(upper.green, lower.green, highlight.green), channel(upper.blue, lower.blue, highlight.blue), 255)
+                    .ToPremultiplied(1.0f);
+                mesh.vertices.push_back(vertex);
+            }
+        for (int y = 0; y < rows; ++y)
+            for (int x = 0; x < columns; ++x)
+            {
+                const int a = y * (columns + 1) + x, b = a + 1, c = a + columns + 1, d = c + 1;
+                mesh.indices.insert(mesh.indices.end(), {a, c, b, b, c, d});
+            }
+        m_geometry = GetRenderManager()->MakeGeometry(std::move(mesh));
+    }
+    m_geometry.Render(GetAbsoluteOffset(Rml::BoxArea::Content));
 }

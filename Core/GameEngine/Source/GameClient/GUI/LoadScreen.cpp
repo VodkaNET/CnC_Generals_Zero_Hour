@@ -161,6 +161,7 @@ static void fillLocalGeneral( LoadScreenData &view, const PlayerTemplate *pt, Bo
 {
 	const Image *portrait = getLocalGeneralPortrait( pt, large, view.m_localName );
 	AsciiString features = pt->getGeneralFeatures();
+    view.m_localSide = pt->getSide();
 	view.m_localFeatures = TheGameText->fetch( features.isEmpty() ? "GUI:PlayerObserver" : pt->getGeneralFeatures() );
 	view.m_localPortrait = portrait ? portrait->getName() : AsciiString::TheEmptyString;
 }

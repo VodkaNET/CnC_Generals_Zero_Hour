@@ -102,6 +102,7 @@ struct LoadScreenData
 
 	UnicodeString m_localName; ///< local player's general or faction
 	UnicodeString m_localFeatures;
+    AsciiString m_localSide;
 	AsciiString m_localPortrait; ///< mapped image name
 
 	AsciiString m_backgroundImage; ///< mapped image behind the screen, empty for none (original Generals)

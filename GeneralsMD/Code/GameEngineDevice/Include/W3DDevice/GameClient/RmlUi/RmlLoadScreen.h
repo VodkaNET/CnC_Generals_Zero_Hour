@@ -32,6 +32,7 @@
 
 #include <RmlUi/Core/DataModelHandle.h>
 #include <RmlUi/Core/Types.h>
+#include <cstddef>
 
 namespace Rml { class Context; class ElementDocument; }
 
@@ -114,6 +115,13 @@ private:
 	Rml::Vector<MarkerModel> m_markers;
 	Rml::String m_localName;
 	Rml::String m_localFeatures;
+	Rml::Vector<Rml::String> m_localFeatureLines;
+	Rml::String m_localSide;
+	std::size_t m_tipIndex = std::size_t(-1);
+	Rml::String m_tipFaction, m_tipTitle, m_tipAdvice, m_tipDescription, m_tipImage, m_tipCost, m_tipAuthor;
+	bool m_hasTip = false;
+	bool m_hasTipImage = false;
+	bool m_hasTipCost = false;
 	Rml::String m_localPortrait;
 	Rml::String m_mapName;
 	Rml::String m_mapDisplayName;

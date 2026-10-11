@@ -187,3 +187,15 @@ public:
 protected:
     void OnRender() override;
 };
+
+class RmlLoadBackdropElement : public Rml::Element
+{
+public:
+    explicit RmlLoadBackdropElement(const Rml::String &tag) : Rml::Element(tag) {}
+protected:
+    void OnRender() override;
+private:
+    Rml::Vector2f m_size;
+    bool m_dark = false;
+    Rml::Geometry m_geometry;
+};

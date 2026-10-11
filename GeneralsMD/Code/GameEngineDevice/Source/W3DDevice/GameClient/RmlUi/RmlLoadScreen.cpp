@@ -22,12 +22,14 @@
 #include "GameClient/LoadScreenData.h"
 #include "W3DDevice/GameClient/RmlUi/RmlUiElements.h"
 #include "W3DDevice/GameClient/RmlUi/RmlUiManager.h"
+#include "W3DDevice/GameClient/RmlUi/RmlLoadingTips.h"
 
 #include <RmlUi/Core/Context.h>
 #include <RmlUi/Core/DataModelHandle.h>
 #include <RmlUi/Core/ElementDocument.h>
 
 #include <cstdio>
+#include <sstream>
 #include <windows.h>
 
 //-------------------------------------------------------------------------------------------------
@@ -145,6 +147,17 @@ void RmlLoadScreen::load(Rml::Context *context)
 		constructor.Bind("markers", &m_markers);
 		constructor.Bind("local_name", &m_localName);
 		constructor.Bind("local_features", &m_localFeatures);
+		constructor.Bind("local_feature_lines", &m_localFeatureLines);
+		constructor.Bind("tip_faction", &m_tipFaction);
+		constructor.Bind("tip_title", &m_tipTitle);
+		constructor.Bind("tip_advice", &m_tipAdvice);
+		constructor.Bind("tip_description", &m_tipDescription);
+		constructor.Bind("tip_image", &m_tipImage);
+		constructor.Bind("tip_cost", &m_tipCost);
+		constructor.Bind("tip_author", &m_tipAuthor);
+		constructor.Bind("has_tip", &m_hasTip);
+		constructor.Bind("has_tip_image", &m_hasTipImage);
+		constructor.Bind("has_tip_cost", &m_hasTipCost);
 		constructor.Bind("local_portrait", &m_localPortrait);
 		constructor.Bind("has_portrait", &m_hasPortrait);
 		constructor.Bind("map_name", &m_mapName);
@@ -221,6 +234,29 @@ void RmlLoadScreen::refresh()
 
 	m_localName = unicodeToUtf8(data.m_localName);
 	m_localFeatures = unicodeToUtf8(data.m_localFeatures);
+    m_localFeatureLines.clear();
+    std::istringstream features(m_localFeatures);
+    std::string feature;
+    while (std::getline(features, feature))
+    {
+        if (!feature.empty() && feature.back() == '\r') feature.pop_back();
+        if (!feature.empty()) m_localFeatureLines.push_back(feature);
+    }
+    const std::string side = data.m_localSide.str();
+    if (m_localSide != side || m_tipIndex == std::size_t(-1))
+        m_tipIndex = RmlLoadingTips::select(side);
+    m_localSide = side;
+    const auto tip = RmlLoadingTips::resolve(m_tipIndex, side);
+    m_tipFaction = tip.faction;
+    m_tipTitle = tip.title;
+    m_tipAdvice = tip.advice;
+    m_tipDescription = tip.description;
+    m_tipImage = tip.image;
+    m_tipCost = tip.cost;
+    m_tipAuthor = tip.author;
+    m_hasTip = tip.valid;
+    m_hasTipImage = !tip.image.empty();
+    m_hasTipCost = !tip.cost.empty();
 	m_localPortrait = data.m_localPortrait.str();
 	m_hasPortrait = !data.m_localPortrait.isEmpty();
 	m_mapName = data.m_mapName.str();
@@ -276,6 +312,17 @@ void RmlLoadScreen::refresh()
 		m_modelHandle.DirtyVariable("markers");
 		m_modelHandle.DirtyVariable("local_name");
 		m_modelHandle.DirtyVariable("local_features");
+		m_modelHandle.DirtyVariable("local_feature_lines");
+		m_modelHandle.DirtyVariable("tip_faction");
+		m_modelHandle.DirtyVariable("tip_title");
+		m_modelHandle.DirtyVariable("tip_advice");
+		m_modelHandle.DirtyVariable("tip_description");
+		m_modelHandle.DirtyVariable("tip_image");
+		m_modelHandle.DirtyVariable("tip_cost");
+		m_modelHandle.DirtyVariable("tip_author");
+		m_modelHandle.DirtyVariable("has_tip");
+		m_modelHandle.DirtyVariable("has_tip_image");
+		m_modelHandle.DirtyVariable("has_tip_cost");
 		m_modelHandle.DirtyVariable("local_portrait");
 		m_modelHandle.DirtyVariable("has_portrait");
 		m_modelHandle.DirtyVariable("map_name");
@@ -316,6 +363,8 @@ void RmlLoadScreen::open()
 	if (!m_document)
 		return;
 
+	m_localSide = LoadScreenData::instance().m_localSide.str();
+	m_tipIndex = RmlLoadingTips::select(m_localSide);
 	refresh();
 	m_document->Show();
 }
