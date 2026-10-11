@@ -72,6 +72,7 @@
 #include "W3DDevice/GameClient/RmlUi/RmlRulerDecorator.h"
 #include "W3DDevice/GameClient/RmlUi/RmlTextShaping.h"
 #include "W3DDevice/GameClient/RmlUi/RmlUiElements.h"
+#include "W3DDevice/GameClient/RmlUi/RmlModelPreview.h"
 
 #include <RmlUi/Core/Context.h>
 #include <RmlUi/Core/ComputedValues.h>
@@ -474,6 +475,8 @@ void RmlUiManager::registerCustomElements()
 	Rml::Factory::RegisterElementInstancer("productionclock", m_productionClockInstancer);
 	m_loadBackdropInstancer = new Rml::ElementInstancerGeneric<RmlLoadBackdropElement>();
 	Rml::Factory::RegisterElementInstancer("loadbackdrop", m_loadBackdropInstancer);
+	m_modelPreviewInstancer = new Rml::ElementInstancerGeneric<RmlModelPreviewElement>();
+	Rml::Factory::RegisterElementInstancer("modelpreview", m_modelPreviewInstancer);
 }
 
 void RmlUiManager::shutdown()
@@ -515,6 +518,7 @@ void RmlUiManager::shutdown()
 	delete m_radarInstancer; m_radarInstancer = nullptr;
 	delete m_productionClockInstancer; m_productionClockInstancer = nullptr;
 	delete m_loadBackdropInstancer; m_loadBackdropInstancer = nullptr;
+	delete m_modelPreviewInstancer; m_modelPreviewInstancer = nullptr;
 	m_currentScreen = nullptr;
 	TransitionSounds::reset();
 	m_debuggerInitialized = false;

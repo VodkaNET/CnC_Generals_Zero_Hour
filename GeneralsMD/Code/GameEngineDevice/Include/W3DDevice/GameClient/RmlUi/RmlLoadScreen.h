@@ -118,7 +118,7 @@ private:
 	Rml::Vector<Rml::String> m_localFeatureLines;
 	Rml::String m_localSide;
 	std::size_t m_tipIndex = std::size_t(-1);
-	Rml::String m_tipFaction, m_tipTitle, m_tipAdvice, m_tipDescription, m_tipImage, m_tipCost, m_tipAuthor;
+	Rml::String m_tipFaction, m_tipTitle, m_tipAdvice, m_tipDescription, m_tipImage, m_tipCost, m_tipAuthor, m_tipModelObject;
 	bool m_hasTip = false;
 	bool m_hasTipImage = false;
 	bool m_hasTipCost = false;

@@ -23,6 +23,7 @@
 #include "W3DDevice/GameClient/RmlUi/RmlUiElements.h"
 #include "W3DDevice/GameClient/RmlUi/RmlUiManager.h"
 #include "W3DDevice/GameClient/RmlUi/RmlLoadingTips.h"
+#include "W3DDevice/GameClient/RmlUi/RmlModelPreview.h"
 
 #include <RmlUi/Core/Context.h>
 #include <RmlUi/Core/DataModelHandle.h>
@@ -155,6 +156,7 @@ void RmlLoadScreen::load(Rml::Context *context)
 		constructor.Bind("tip_image", &m_tipImage);
 		constructor.Bind("tip_cost", &m_tipCost);
 		constructor.Bind("tip_author", &m_tipAuthor);
+		constructor.Bind("tip_model_object", &m_tipModelObject);
 		constructor.Bind("has_tip", &m_hasTip);
 		constructor.Bind("has_tip_image", &m_hasTipImage);
 		constructor.Bind("has_tip_cost", &m_hasTipCost);
@@ -254,6 +256,7 @@ void RmlLoadScreen::refresh()
     m_tipImage = tip.image;
     m_tipCost = tip.cost;
     m_tipAuthor = tip.author;
+    m_tipModelObject = tip.modelObject;
     m_hasTip = tip.valid;
     m_hasTipImage = !tip.image.empty();
     m_hasTipCost = !tip.cost.empty();
@@ -320,6 +323,7 @@ void RmlLoadScreen::refresh()
 		m_modelHandle.DirtyVariable("tip_image");
 		m_modelHandle.DirtyVariable("tip_cost");
 		m_modelHandle.DirtyVariable("tip_author");
+		m_modelHandle.DirtyVariable("tip_model_object");
 		m_modelHandle.DirtyVariable("has_tip");
 		m_modelHandle.DirtyVariable("has_tip_image");
 		m_modelHandle.DirtyVariable("has_tip_cost");
@@ -376,7 +380,12 @@ void RmlLoadScreen::close()
 		RmlVideoElement::setSource(s_videoSources[i], nullptr);
 
 	if (m_document)
-		m_document->Hide();
+    {
+        Rml::ElementList previews;
+        m_document->GetElementsByTagName(previews, "modelpreview");
+        for (auto *element : previews) static_cast<RmlModelPreviewElement *>(element)->releaseModel();
+        m_document->Hide();
+    }
 }
 
 bool RmlLoadScreen::isVisible() const

@@ -14,6 +14,7 @@ struct Tip
     std::string description;
     std::string image;
     std::string cost;
+    std::string modelObject;
     bool valid = false;
 };
 std::size_t select(const std::string &side);

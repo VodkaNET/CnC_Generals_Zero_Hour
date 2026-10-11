@@ -22,7 +22,7 @@ namespace
 {
 struct Entry
 {
-    std::string faction, title, advice, author, command, object, upgrade;
+    std::string faction, title, advice, author, command, object, upgrade, relatedObject;
 };
 std::vector<Entry> entries;
 std::map<std::string, std::size_t> cursors;
@@ -73,11 +73,35 @@ void load()
         else if (key == "Command") entry->command = value;
         else if (key == "Object") entry->object = value;
         else if (key == "Upgrade") entry->upgrade = value;
+        else if (key == "RelatedObject") entry->relatedObject = value;
     }
     entries.erase(std::remove_if(entries.begin(), entries.end(), [](const Entry &entry) {
         return entry.title.empty() || entry.advice.empty();
     }), entries.end());
     loaded = true;
+}
+const ThingTemplate *relatedUnit(const CommandButton *command, const UpgradeTemplate *upgrade)
+{
+    if (!TheThingFactory || !TheControlBar || !command) return nullptr;
+    const ThingTemplate *fallback = nullptr;
+    for (auto *object = TheThingFactory->firstTemplate(); object; object = object->friend_getNextTemplate())
+    {
+        const auto *set = TheControlBar->findCommandSet(object->friend_getCommandSetString());
+        if (!set) continue;
+        for (Int i = 0; i < MAX_COMMANDS_PER_SET; ++i)
+        {
+            const auto *button = set->getCommandButton(i);
+            if (!button) continue;
+            bool matches = button == command || (upgrade && button->getUpgradeTemplate() == upgrade);
+            if (command->getSpecialPowerTemplate() && button->getSpecialPowerTemplate() == command->getSpecialPowerTemplate()) matches = true;
+            for (const auto science : command->getScienceVec())
+                if (std::find(button->getScienceVec().begin(), button->getScienceVec().end(), science) != button->getScienceVec().end()) matches = true;
+            if (!matches) continue;
+            if (object->isKindOf(KINDOF_VEHICLE) || object->isKindOf(KINDOF_INFANTRY)) return object;
+            if (!fallback) fallback = object;
+        }
+    }
+    return fallback;
 }
 std::string gameText(const AsciiString &label)
 {
@@ -137,6 +161,9 @@ Tip resolve(std::size_t index, const std::string &side)
     }
     else if (upgrade) cost = upgrade->calcCostToBuild(player);
     if (cost >= 0) tip.cost = "$" + std::to_string(cost);
+    if (!entry.relatedObject.empty()) tip.modelObject = entry.relatedObject;
+    else if (object) tip.modelObject = object->getName().str();
+    else if (const auto *related = relatedUnit(command, upgrade)) tip.modelObject = related->getName().str();
     return tip;
 }
 }
