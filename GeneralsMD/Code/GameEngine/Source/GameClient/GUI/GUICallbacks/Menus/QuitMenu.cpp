@@ -341,8 +341,6 @@ void ToggleQuitMenu()
 		const AsciiString rmlWndPath = QuitMenuActions::useNoSaveVariant() ? AsciiString("Menus/QuitNoSave.wnd") : AsciiString("Menus/QuitMenu.wnd");
 		if (RmlUiScreenRegistry::routesToRmlUi(rmlWndPath))
 		{
-			QuitMenuActions::pauseForOpen();
-
 			if (quitConfirmationWindow)
 				TheWindowManager->winDestroy(quitConfirmationWindow);
 			quitConfirmationWindow = nullptr;
@@ -351,6 +349,7 @@ void ToggleQuitMenu()
 			TheControlBar->hidePurchaseScience();
 
 			RmlUiScreenRegistry::open(rmlWndPath);
+			QuitMenuActions::pauseForOpen();
 			TransitionSounds::play(QuitMenuActions::useNoSaveVariant() ? "QuitNoSave" : "QuitFull");
 			isVisible = TRUE;
 			TheInGameUI->setQuitMenuVisible(isVisible);
