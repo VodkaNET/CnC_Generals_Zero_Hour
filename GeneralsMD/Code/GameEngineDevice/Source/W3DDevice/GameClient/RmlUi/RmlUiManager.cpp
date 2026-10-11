@@ -470,6 +470,8 @@ void RmlUiManager::registerCustomElements()
 
 	m_radarInstancer = new Rml::ElementInstancerGeneric<RmlRadarElement>();
 	Rml::Factory::RegisterElementInstancer("radar", m_radarInstancer);
+	m_productionClockInstancer = new Rml::ElementInstancerGeneric<RmlProductionClockElement>();
+	Rml::Factory::RegisterElementInstancer("productionclock", m_productionClockInstancer);
 }
 
 void RmlUiManager::shutdown()
@@ -509,6 +511,7 @@ void RmlUiManager::shutdown()
 	delete m_scrollLogInstancer; m_scrollLogInstancer = nullptr;
 	delete m_videoInstancer; m_videoInstancer = nullptr;
 	delete m_radarInstancer; m_radarInstancer = nullptr;
+	delete m_productionClockInstancer; m_productionClockInstancer = nullptr;
 	m_currentScreen = nullptr;
 	TransitionSounds::reset();
 	m_debuggerInitialized = false;
@@ -683,7 +686,7 @@ bool RmlUiManager::anyVisibleDocumentAt(int x, int y) const
 
 		float left = doc->GetAbsoluteLeft();
 		float top = doc->GetAbsoluteTop();
-		if (!doc->IsClassSet("cb") && (x < left || y < top || x > left + doc->GetOffsetWidth() || y > top + doc->GetOffsetHeight()))
+		if (x < left || y < top || x > left + doc->GetOffsetWidth() || y > top + doc->GetOffsetHeight())
 			continue;
 
 		Rml::Element *hit = m_context->GetElementAtPoint(Rml::Vector2f((float)x, (float)y), nullptr, doc);

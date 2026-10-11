@@ -39,6 +39,7 @@
 #include <RmlUi/Core/Event.h>
 
 #include <cctype>
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <windows.h>
@@ -75,6 +76,8 @@ namespace
 		slot.icon = imageName(button.image);
 		slot.overlay = imageName(button.overlay);
 		slot.hasClock = button.clockPercent >= 0;
+		slot.clockPercent = (std::max)(0, (std::min)(100, int(button.clockPercent)));
+		slot.clockInverse = button.clockInverse != FALSE;
 		if (slot.hasClock)
 		{
 			// the darkened part: what is still to go for the inverse clock, what is done for the normal one
@@ -199,10 +202,7 @@ void RmlRadarElement::OnRender()
 
 	const Rml::Vector2f pos = GetAbsoluteOffset(Rml::BoxArea::Content);
 	const Rml::Vector2f size = GetBox().GetSize(Rml::BoxArea::Content);
-	const auto &settings = RmlInterfaceSettings::current();
-    const float scale = float(settings.controlBarScalePercent) / settings.scalePercent;
-    ControlBarActions::placeRadar((Int)(pos.x * scale + 0.5f), (Int)(pos.y * scale + 0.5f),
-        (Int)(size.x * scale + 0.5f), (Int)(size.y * scale + 0.5f));
+	ControlBarActions::placeRadar((Int)(pos.x + 0.5f), (Int)(pos.y + 0.5f), (Int)(size.x + 0.5f), (Int)(size.y + 0.5f));
 
 	RmlUiRenderInterface *renderInterface = static_cast<RmlUiRenderInterface *>(Rml::GetRenderInterface());
 	if (renderInterface)
@@ -244,6 +244,8 @@ void RmlControlBarScreen::load(Rml::Context *context)
 			slot.RegisterMember("poor", &SlotModel::poor);
 			slot.RegisterMember("flash", &SlotModel::flash);
 			slot.RegisterMember("has_clock", &SlotModel::hasClock);
+			slot.RegisterMember("clock_percent", &SlotModel::clockPercent);
+			slot.RegisterMember("clock_inverse", &SlotModel::clockInverse);
 			slot.RegisterMember("icon", &SlotModel::icon);
 			slot.RegisterMember("overlay", &SlotModel::overlay);
 			slot.RegisterMember("clock", &SlotModel::clock);

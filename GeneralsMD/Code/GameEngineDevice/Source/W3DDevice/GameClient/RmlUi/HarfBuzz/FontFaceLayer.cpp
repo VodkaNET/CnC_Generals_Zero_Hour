@@ -5,6 +5,8 @@
 #include "FontFaceHandleHarfBuzz.h"
 #include <string.h>
 #include <type_traits>
+#include <RmlUi/Core/Core.h>
+#include "W3DDevice/GameClient/RmlUi/RmlUiRenderInterface.h"
 
 namespace RmlHarfBuzz {
 
@@ -143,8 +145,15 @@ bool FontFaceLayer::Generate(const FontFaceHandleHarfBuzz* handle, const FontFac
 				Vector<byte> data;
 				if (!handle->GenerateLayerTexture(data, dimensions, effect_ptr, texture_id, handle_version) || data.empty())
 					return false;
-				if (!texture_interface.GenerateTexture(data, dimensions))
-					return false;
+                auto *renderer = dynamic_cast<RmlUiRenderInterface *>(Rml::GetRenderInterface());
+                if (renderer)
+                {
+                    const auto texture = renderer->generateFontTexture(data, dimensions);
+                    if (!texture) return false;
+                    texture_interface.SetTextureHandle(texture, dimensions);
+                }
+                else if (!texture_interface.GenerateTexture(data, dimensions))
+                    return false;
 				return true;
 			};
 

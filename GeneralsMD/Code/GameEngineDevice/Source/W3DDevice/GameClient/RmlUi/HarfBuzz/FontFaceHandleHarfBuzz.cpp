@@ -12,6 +12,8 @@
 #include <hb.h>
 #include <numeric>
 #include <utility>
+#include <cmath>
+#include "Common/GlobalData.h"
 
 namespace RmlHarfBuzz {
 
@@ -411,7 +413,12 @@ int FontFaceHandleHarfBuzz::GenerateString(RenderManager& render_manager, Textur
 				Vector2f glyph_offset = {0.0f, 0.0f};
 				glyph_offset += Vector2f{float(glyph_positions[g].x_offset >> 6), float(glyph_positions[g].y_offset >> 6)};
 				Vector2f glyph_geometry_position = Vector2f{position.x + line_width, position.y} + glyph_offset;
-				layer->GenerateGeometry(&mesh_list[geometry_index], glyph_pair.first, glyph_pair.second.character, is_cluster, glyph_geometry_position, glyph_color);
+				if (TheGlobalData && TheGlobalData->m_d3d8RmlUiFix)
+                {
+                    glyph_geometry_position.x = std::round(glyph_geometry_position.x);
+                    glyph_geometry_position.y = std::round(glyph_geometry_position.y);
+                }
+                layer->GenerateGeometry(&mesh_list[geometry_index], glyph_pair.first, glyph_pair.second.character, is_cluster, glyph_geometry_position, glyph_color);
 
 				// Adjust the cursor for this character's advance.
 				if (glyph_info[g].codepoint != 0)

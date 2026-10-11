@@ -72,6 +72,8 @@ public:
 		bool poor = false;			///< can't afford: dimmed but not greyed
 		bool flash = false;
 		bool hasClock = false;
+		int clockPercent = 0;
+		bool clockInverse = false;
 		Rml::String icon;
 		Rml::String overlay;
 		Rml::String clock = "0%";	///< height of the darkened part, "37%"

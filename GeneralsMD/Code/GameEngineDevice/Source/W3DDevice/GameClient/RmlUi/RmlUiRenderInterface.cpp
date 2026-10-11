@@ -31,6 +31,7 @@
 // implementation for the whole GeneralsMD device library (PNG/JPG decode for Data/UI images).
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+#include <cmath>
 
 // Vertex format for 2D UI geometry, transformed by an orthographic projection (see
 // setOrthoProjection). Using transformed (non-RHW) vertices lets RenderGeometry's
@@ -343,7 +344,15 @@ void RmlUiRenderInterface::RenderGeometry(Rml::CompiledGeometryHandle geometry, 
 		world._41 = translation.x;
 		world._42 = translation.y;
 	}
-	dev->SetTransform(D3DTS_WORLD, &world);
+	const auto fontTexture = m_textures.find(texture);
+    if (TheGlobalData && TheGlobalData->m_d3d8RmlUiFix && fontTexture != m_textures.end() && fontTexture->second.fontAtlas &&
+        world._11 == 1.0f && world._22 == 1.0f && world._12 == 0.0f && world._21 == 0.0f &&
+        world._13 == 0.0f && world._23 == 0.0f && world._14 == 0.0f && world._24 == 0.0f && world._44 == 1.0f)
+    {
+        world._41 = std::round(world._41);
+        world._42 = std::round(world._42);
+    }
+    dev->SetTransform(D3DTS_WORLD, &world);
 
 	if (texture != 0)
 	{
@@ -578,6 +587,13 @@ Rml::TextureHandle RmlUiRenderInterface::GenerateTexture(Rml::Span<const Rml::by
 }
 
 //-------------------------------------------------------------------------------------------------
+Rml::TextureHandle RmlUiRenderInterface::generateFontTexture(Rml::Span<const Rml::byte> source, Rml::Vector2i dimensions)
+{
+    const auto handle = GenerateTexture(source, dimensions);
+    if (handle) m_textures[handle].fontAtlas = true;
+    return handle;
+}
+
 // DX8 has no native scissor rect. We emulate it by shrinking the viewport to the scissor
 // region (D3D clips rasterization to the viewport for free) and rebuilding the orthographic
 // projection using the scissor rect's *absolute* pixel bounds instead of the full context

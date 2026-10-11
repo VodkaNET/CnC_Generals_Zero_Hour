@@ -82,6 +82,7 @@ public:
 	virtual Rml::TextureHandle LoadTexture(Rml::Vector2i& texture_dimensions, const Rml::String& source) override;
 	virtual Rml::TextureHandle GenerateTexture(Rml::Span<const Rml::byte> source, Rml::Vector2i source_dimensions) override;
 	virtual void ReleaseTexture(Rml::TextureHandle texture) override;
+	Rml::TextureHandle generateFontTexture(Rml::Span<const Rml::byte> source, Rml::Vector2i dimensions);
 
 	virtual void EnableScissorRegion(bool enable) override;
 	virtual void SetScissorRegion(Rml::Rectanglei region) override;
@@ -115,6 +116,7 @@ private:
 	{
 		IDirect3DTexture8 *d3dTexture = nullptr; // AddRef'd copy we own and must Release
 		bool ownsRelease = true;
+		bool fontAtlas = false;
 		bool premultiplied = true; // engine .tga/.dds pages are straight alpha
 	};
 

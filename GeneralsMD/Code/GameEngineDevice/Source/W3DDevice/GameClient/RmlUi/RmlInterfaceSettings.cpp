@@ -12,6 +12,7 @@
 #include <cmath>
 #include <map>
 #include <set>
+#include <regex>
 
 namespace RmlInterfaceSettings
 {
@@ -62,6 +63,12 @@ const Values &current()
         values.enableBackground = pref.getBool("EnableBackground", FALSE);
         values.backgroundImage = pref.getAsciiString("BackgroundImage", "").str();
         values.hideBorder = pref.getBool("HideBorder", FALSE);
+        values.showEnergyNumbers = pref.getBool("ShowEnergyNumbers", FALSE);
+        values.showUnitName = pref.getBool("ShowUnitName", FALSE);
+        values.showGeneralRank = pref.getBool("ShowGeneralRank", FALSE);
+        values.showPromotionPoints = pref.getBool("ShowPromotionPoints", FALSE);
+        values.showIconHotkeys = pref.getBool("ShowIconHotkeys", TRUE);
+        values.productionProgressStyle = pref.getInt("ProductionProgressStyle", 0) == 1 ? 1 : 0;
         loaded = true;
     }
     return values;
@@ -79,12 +86,36 @@ std::string stylePath(const std::string &path)
     return path;
 }
 
+std::string scaleControlBarStyle(const std::string &source)
+{
+    const auto &settings = current();
+    if (settings.controlBarScalePercent == settings.scalePercent) return source;
+    const double scale = double(settings.controlBarScalePercent) / settings.scalePercent;
+    static const std::regex tokens(R"rcss(/\*[\s\S]*?\*/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|(\bresolution\s*:\s*)([0-9]+(?:\.[0-9]+)?)(x\b)|(-?(?:[0-9]+(?:\.[0-9]+)?|\.[0-9]+))(dp\b))rcss");
+    std::string result;
+    size_t offset = 0;
+    for (std::sregex_iterator it(source.begin(), source.end(), tokens), end; it != end; ++it)
+    {
+        const auto &match = *it;
+        result.append(source, offset, size_t(match.position()) - offset);
+        if (match[2].matched)
+            result += match[1].str() + std::to_string(std::stod(match[2].str()) / scale) + match[3].str();
+        else if (match[4].matched)
+            result += std::to_string(std::stod(match[4].str()) * scale) + match[5].str();
+        else result += match.str();
+        offset = size_t(match.position() + match.length());
+    }
+    result.append(source, offset, std::string::npos);
+    return result;
+}
+
 bool save(const Values &input, std::string &error)
 {
     error.clear();
     Values next = input;
     next.scalePercent = std::clamp(next.scalePercent, 50, 100);
     next.controlBarScalePercent = std::clamp(next.controlBarScalePercent, 50, 100);
+    next.productionProgressStyle = next.productionProgressStyle == 1 ? 1 : 0;
     if (!next.customTheme.empty() && (RmlInterfacePlatform::extension(next.customTheme) != ".rcss" || !parseSheet(next.customTheme)))
     {
         error = "Custom Theme could not be loaded. Choose a valid .rcss file.";
@@ -109,6 +140,12 @@ bool save(const Values &input, std::string &error)
     pref.setBool("EnableBackground", next.enableBackground);
     pref.setAsciiString("BackgroundImage", next.backgroundImage.c_str());
     pref.setBool("HideBorder", next.hideBorder);
+    pref.setBool("ShowEnergyNumbers", next.showEnergyNumbers);
+    pref.setBool("ShowUnitName", next.showUnitName);
+    pref.setBool("ShowGeneralRank", next.showGeneralRank);
+    pref.setBool("ShowPromotionPoints", next.showPromotionPoints);
+    pref.setBool("ShowIconHotkeys", next.showIconHotkeys);
+    pref.setInt("ProductionProgressStyle", next.productionProgressStyle);
     if (!pref.write())
     {
         error = "Could not save GeneralsOnlineInterface.ini in the game user-data folder.";
@@ -238,25 +275,16 @@ void apply(Rml::Context *context, int width, int height)
         }
         if (doc->IsClassSet("cb"))
         {
-            const std::string scaleKey = std::to_string(settings.controlBarScalePercent) + "/" +
-                std::to_string(settings.scalePercent) + "/" + std::to_string(width) + "/" + std::to_string(height);
-            if (doc->GetAttribute<Rml::String>("data-controlbar-scale", "") != scaleKey)
-            {
-                const float scale = float(settings.controlBarScalePercent) / settings.scalePercent;
-                doc->SetProperty("width", std::to_string(width / scale) + "px");
-                doc->SetProperty("height", std::to_string(height / scale) + "px");
-                if (settings.controlBarScalePercent == settings.scalePercent)
-                {
-                    doc->RemoveProperty("transform-origin");
-                    doc->RemoveProperty("transform");
-                }
-                else
-                {
-                    doc->SetProperty("transform-origin", "0px 0px");
-                    doc->SetProperty("transform", "scale(" + std::to_string(scale) + ")");
-                }
-                doc->SetAttribute("data-controlbar-scale", scaleKey);
-            }
+            doc->SetClass("show-energy-numbers", settings.showEnergyNumbers);
+            doc->SetClass("show-unit-name", settings.showUnitName);
+            doc->SetClass("show-general-rank", settings.showGeneralRank);
+            doc->SetClass("show-promotion-points", settings.showPromotionPoints);
+            doc->SetClass("hide-icon-hotkeys", !settings.showIconHotkeys);
+            doc->SetClass("classic-radial-progress", settings.productionProgressStyle == 1);
+            doc->RemoveProperty("transform");
+            doc->RemoveProperty("transform-origin");
+            doc->RemoveProperty("width");
+            doc->RemoveProperty("height");
         }
         state.revision = revision;
     }

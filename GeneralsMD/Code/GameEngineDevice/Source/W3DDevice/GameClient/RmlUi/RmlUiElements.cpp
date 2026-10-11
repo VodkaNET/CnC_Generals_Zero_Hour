@@ -22,6 +22,7 @@
 #include "Common/AsciiString.h"
 #include "Common/UnicodeUtf8.h"
 #include "GameClient/GameText.h"
+#include "GameClient/Display.h"
 #include "GameClient/Image.h"
 #include "GameClient/MapUtil.h"
 #include "WW3D2/texture.h"
@@ -507,4 +508,33 @@ void RmlVideoElement::OnRender()
 		buildGeometry();
 	if (m_geometry)
 		m_geometry.Render(GetAbsoluteOffset(Rml::BoxArea::Content), m_texture);
+}
+
+void RmlProductionClockElement::OnRender()
+{
+    Rml::Element::OnRender();
+    if (!TheDisplay) return;
+    const auto position = GetAbsoluteOffset(Rml::BoxArea::Content);
+    const auto size = GetBox().GetSize(Rml::BoxArea::Content);
+    if (size.x <= 0 || size.y <= 0) return;
+    struct ClockDraw
+    {
+        Int x, y, width, height, progress;
+        bool inverse;
+        UnsignedInt colour;
+    };
+    ClockDraw clock = {
+        Int(position.x + 0.5f), Int(position.y + 0.5f), Int(size.x + 0.5f), Int(size.y + 0.5f),
+        std::clamp(GetAttribute<int>("progress", 0), 0, 100), GetAttribute<bool>("inverse", false),
+        UnsignedInt(160.0f * GetComputedValues().opacity()) << 24
+    };
+    auto *renderer = static_cast<RmlUiRenderInterface *>(Rml::GetRenderInterface());
+    if (!renderer) return;
+    renderer->drawEngine([](void *context) {
+        const auto &clock = *static_cast<const ClockDraw *>(context);
+        if (clock.inverse)
+            TheDisplay->drawRemainingRectClock(clock.x, clock.y, clock.width, clock.height, clock.progress, clock.colour);
+        else
+            TheDisplay->drawRectClock(clock.x, clock.y, clock.width, clock.height, clock.progress, clock.colour);
+    }, &clock);
 }

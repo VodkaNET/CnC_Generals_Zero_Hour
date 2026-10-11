@@ -116,7 +116,19 @@ Rml::FileHandle RmlUiFileInterface::Open(const Rml::String &path)
 
 	if (!TheFileSystem)
 		return 0;
-	File *file = TheFileSystem->openFile(resource.c_str(), File::READ | File::BINARY);
+	if (_stricmp(resource.substr(resource.find_last_of("/\\") + 1).c_str(), "ControlBar.rcss") == 0)
+    {
+        File *real = TheFileSystem->openFile(resource.c_str(), File::READ | File::BINARY);
+        if (!real) return 0;
+        MemFile *mem = new MemFile();
+        mem->data.resize(size_t(real->size()));
+        if (!mem->data.empty()) real->read(&mem->data[0], Int(mem->data.size()));
+        real->close();
+        mem->data = RmlInterfaceSettings::scaleControlBarStyle(mem->data);
+        m_memFiles.insert(mem);
+        return (Rml::FileHandle)mem;
+    }
+    File *file = TheFileSystem->openFile(resource.c_str(), File::READ | File::BINARY);
 	return (Rml::FileHandle)file;
 }
 

@@ -178,3 +178,12 @@ private:
 	Rml::Geometry m_geometry;
 	bool m_geometryDirty = true;
 };
+
+class RmlProductionClockElement : public Rml::Element
+{
+public:
+    explicit RmlProductionClockElement(const Rml::String &tag) : Rml::Element(tag) {}
+
+protected:
+    void OnRender() override;
+};

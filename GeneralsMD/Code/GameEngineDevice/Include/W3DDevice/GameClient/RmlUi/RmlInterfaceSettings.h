@@ -16,10 +16,17 @@ struct Values
     bool enableBackground = false;
     std::string backgroundImage;
     bool hideBorder = false;
+    bool showEnergyNumbers = false;
+    bool showUnitName = false;
+    bool showGeneralRank = false;
+    bool showPromotionPoints = false;
+    bool showIconHotkeys = true;
+    int productionProgressStyle = 0;
 };
 
 const Values &current();
 std::string stylePath(const std::string &path);
+std::string scaleControlBarStyle(const std::string &source);
 bool save(const Values &values, std::string &error);
 std::vector<std::string> themeFiles();
 std::vector<std::string> backgroundFiles();

@@ -90,6 +90,12 @@ void RmlOptionsScreen::load(Rml::Context *context)
 		constructor.Bind("interface_background", &m_model.enableBackground);
 		constructor.Bind("background_index", &m_model.backgroundIndex);
 		constructor.Bind("hide_ui_border", &m_model.hideBorder);
+		constructor.Bind("show_energy_numbers", &m_model.showEnergyNumbers);
+		constructor.Bind("show_unit_name", &m_model.showUnitName);
+		constructor.Bind("show_general_rank", &m_model.showGeneralRank);
+		constructor.Bind("show_promotion_points", &m_model.showPromotionPoints);
+		constructor.Bind("show_icon_hotkeys", &m_model.showIconHotkeys);
+		constructor.Bind("production_progress_style", &m_model.productionProgressStyle);
 		constructor.Bind("interface_error", &m_model.interfaceError);
 		constructor.Bind("background_path", &m_model.backgroundPath);
 		constructor.Bind("language_filter", &m_model.languageFilter);
@@ -229,6 +235,12 @@ void RmlOptionsScreen::loadCurrentValues()
 	m_model.backgroundIndex = selectInterfacePath(m_backgroundImages, interfaceValues.backgroundImage);
 	m_model.backgroundPath = interfaceValues.backgroundImage;
 	m_model.hideBorder = interfaceValues.hideBorder;
+	m_model.showEnergyNumbers = interfaceValues.showEnergyNumbers;
+	m_model.showUnitName = interfaceValues.showUnitName;
+	m_model.showGeneralRank = interfaceValues.showGeneralRank;
+	m_model.showPromotionPoints = interfaceValues.showPromotionPoints;
+	m_model.showIconHotkeys = interfaceValues.showIconHotkeys;
+	m_model.productionProgressStyle = interfaceValues.productionProgressStyle;
 	m_model.interfaceError.clear();
 	m_model.languageFilter = OptionsValues::GetCurrentLanguageFilter();
 	m_model.sendDelay = OptionsValues::GetCurrentSendDelay();
@@ -281,6 +293,12 @@ void RmlOptionsScreen::loadDefaultValues()
 	m_model.backgroundIndex = 0;
 	m_model.backgroundPath.clear();
 	m_model.hideBorder = false;
+	m_model.showEnergyNumbers = false;
+	m_model.showUnitName = false;
+	m_model.showGeneralRank = false;
+	m_model.showPromotionPoints = false;
+	m_model.showIconHotkeys = true;
+	m_model.productionProgressStyle = 0;
 	m_model.interfaceError.clear();
 	m_model.languageFilter = OptionsValues::GetDefaultLanguageFilter();
 	m_model.sendDelay = OptionsValues::GetDefaultSendDelay();
@@ -447,6 +465,12 @@ bool RmlOptionsScreen::saveInterfaceValues()
     next.darkTheme = m_model.uiTheme == 1;
     next.enableBackground = m_model.enableBackground;
     next.hideBorder = m_model.hideBorder;
+    next.showEnergyNumbers = m_model.showEnergyNumbers;
+    next.showUnitName = m_model.showUnitName;
+    next.showGeneralRank = m_model.showGeneralRank;
+    next.showPromotionPoints = m_model.showPromotionPoints;
+    next.showIconHotkeys = m_model.showIconHotkeys;
+    next.productionProgressStyle = m_model.productionProgressStyle;
     if (m_model.customThemeIndex > 0 && m_model.customThemeIndex <= int(m_customThemes.size()))
         next.customTheme = m_customThemes[m_model.customThemeIndex - 1];
     if (m_model.backgroundIndex > 0 && m_model.backgroundIndex <= int(m_backgroundImages.size()))

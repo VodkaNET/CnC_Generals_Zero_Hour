@@ -111,6 +111,12 @@ private:
 		bool enableBackground = false;
 		int backgroundIndex = 0;
 		bool hideBorder = false;
+		bool showEnergyNumbers = false;
+		bool showUnitName = false;
+		bool showGeneralRank = false;
+		bool showPromotionPoints = false;
+		bool showIconHotkeys = true;
+		int productionProgressStyle = 0;
 		Rml::String interfaceError;
 		Rml::String backgroundPath;
 
