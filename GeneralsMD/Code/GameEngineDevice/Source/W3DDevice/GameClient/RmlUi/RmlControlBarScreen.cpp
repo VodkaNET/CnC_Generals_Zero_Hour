@@ -29,6 +29,7 @@
 #include "W3DDevice/GameClient/RmlUi/RmlUiElements.h"
 #include "W3DDevice/GameClient/RmlUi/RmlUiRenderInterface.h"
 #include "W3DDevice/GameClient/RmlUi/RmlUiManager.h"
+#include "W3DDevice/GameClient/RmlUi/RmlInterfaceSettings.h"
 
 #include <RmlUi/Core/Context.h>
 #include <RmlUi/Core/DataModelHandle.h>
@@ -198,7 +199,10 @@ void RmlRadarElement::OnRender()
 
 	const Rml::Vector2f pos = GetAbsoluteOffset(Rml::BoxArea::Content);
 	const Rml::Vector2f size = GetBox().GetSize(Rml::BoxArea::Content);
-	ControlBarActions::placeRadar((Int)(pos.x + 0.5f), (Int)(pos.y + 0.5f), (Int)(size.x + 0.5f), (Int)(size.y + 0.5f));
+	const auto &settings = RmlInterfaceSettings::current();
+    const float scale = float(settings.controlBarScalePercent) / settings.scalePercent;
+    ControlBarActions::placeRadar((Int)(pos.x * scale + 0.5f), (Int)(pos.y * scale + 0.5f),
+        (Int)(size.x * scale + 0.5f), (Int)(size.y * scale + 0.5f));
 
 	RmlUiRenderInterface *renderInterface = static_cast<RmlUiRenderInterface *>(Rml::GetRenderInterface());
 	if (renderInterface)

@@ -56,6 +56,7 @@ const Values &current()
         UserPreferences pref;
         pref.load(preferenceFile);
         values.scalePercent = std::clamp(pref.getInt("Scale", 100), 50, 100);
+        values.controlBarScalePercent = std::clamp(pref.getInt("ControlBarScale", 100), 50, 100);
         values.darkTheme = pref.getBool("DarkTheme", FALSE);
         values.customTheme = pref.getAsciiString("CustomTheme", "").str();
         values.enableBackground = pref.getBool("EnableBackground", FALSE);
@@ -83,6 +84,7 @@ bool save(const Values &input, std::string &error)
     error.clear();
     Values next = input;
     next.scalePercent = std::clamp(next.scalePercent, 50, 100);
+    next.controlBarScalePercent = std::clamp(next.controlBarScalePercent, 50, 100);
     if (!next.customTheme.empty() && (RmlInterfacePlatform::extension(next.customTheme) != ".rcss" || !parseSheet(next.customTheme)))
     {
         error = "Custom Theme could not be loaded. Choose a valid .rcss file.";
@@ -101,6 +103,7 @@ bool save(const Values &input, std::string &error)
     UserPreferences pref;
     pref.load(preferenceFile);
     pref.setInt("Scale", next.scalePercent);
+    pref.setInt("ControlBarScale", next.controlBarScalePercent);
     pref.setBool("DarkTheme", next.darkTheme);
     pref.setAsciiString("CustomTheme", next.customTheme.c_str());
     pref.setBool("EnableBackground", next.enableBackground);
@@ -231,6 +234,28 @@ void apply(Rml::Context *context, int width, int height)
             {
                 if (settings.hideBorder) ruler->SetProperty("display", "none");
                 else ruler->RemoveProperty("display");
+            }
+        }
+        if (doc->IsClassSet("cb"))
+        {
+            const std::string scaleKey = std::to_string(settings.controlBarScalePercent) + "/" +
+                std::to_string(settings.scalePercent) + "/" + std::to_string(width) + "/" + std::to_string(height);
+            if (doc->GetAttribute<Rml::String>("data-controlbar-scale", "") != scaleKey)
+            {
+                const float scale = float(settings.controlBarScalePercent) / settings.scalePercent;
+                doc->SetProperty("width", std::to_string(width / scale) + "px");
+                doc->SetProperty("height", std::to_string(height / scale) + "px");
+                if (settings.controlBarScalePercent == settings.scalePercent)
+                {
+                    doc->RemoveProperty("transform-origin");
+                    doc->RemoveProperty("transform");
+                }
+                else
+                {
+                    doc->SetProperty("transform-origin", "0px 0px");
+                    doc->SetProperty("transform", "scale(" + std::to_string(scale) + ")");
+                }
+                doc->SetAttribute("data-controlbar-scale", scaleKey);
             }
         }
         state.revision = revision;

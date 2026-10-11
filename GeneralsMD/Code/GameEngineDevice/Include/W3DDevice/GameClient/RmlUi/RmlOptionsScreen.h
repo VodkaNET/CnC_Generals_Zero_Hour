@@ -105,6 +105,7 @@ private:
 		Rml::String tab = "video";
 
 		int uiScale = 100;
+		int controlBarScale = 100;
 		int uiTheme = 0;
 		int customThemeIndex = 0;
 		bool enableBackground = false;

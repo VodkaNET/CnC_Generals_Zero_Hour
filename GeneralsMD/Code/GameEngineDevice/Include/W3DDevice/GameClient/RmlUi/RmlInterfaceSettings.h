@@ -10,6 +10,7 @@ namespace RmlInterfaceSettings
 struct Values
 {
     int scalePercent = 100;
+    int controlBarScalePercent = 100;
     bool darkTheme = false;
     std::string customTheme;
     bool enableBackground = false;

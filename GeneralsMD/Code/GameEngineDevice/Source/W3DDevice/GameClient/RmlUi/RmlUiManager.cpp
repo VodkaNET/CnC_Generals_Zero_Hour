@@ -683,7 +683,7 @@ bool RmlUiManager::anyVisibleDocumentAt(int x, int y) const
 
 		float left = doc->GetAbsoluteLeft();
 		float top = doc->GetAbsoluteTop();
-		if (x < left || y < top || x > left + doc->GetOffsetWidth() || y > top + doc->GetOffsetHeight())
+		if (!doc->IsClassSet("cb") && (x < left || y < top || x > left + doc->GetOffsetWidth() || y > top + doc->GetOffsetHeight()))
 			continue;
 
 		Rml::Element *hit = m_context->GetElementAtPoint(Rml::Vector2f((float)x, (float)y), nullptr, doc);

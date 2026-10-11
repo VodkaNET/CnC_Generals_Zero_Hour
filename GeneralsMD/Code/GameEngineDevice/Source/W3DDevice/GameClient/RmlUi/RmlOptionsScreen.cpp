@@ -84,6 +84,7 @@ void RmlOptionsScreen::load(Rml::Context *context)
 		m_hq.bind(constructor);
 		constructor.Bind("tab", &m_model.tab);
 		constructor.Bind("ui_scale", &m_model.uiScale);
+		constructor.Bind("controlbar_scale", &m_model.controlBarScale);
 		constructor.Bind("ui_theme", &m_model.uiTheme);
 		constructor.Bind("custom_theme_index", &m_model.customThemeIndex);
 		constructor.Bind("interface_background", &m_model.enableBackground);
@@ -153,7 +154,7 @@ void RmlOptionsScreen::load(Rml::Context *context)
 
 void RmlOptionsScreen::show()
 {
-	if (!m_document)
+	if (!m_document || isVisible())
 		return;
 
 	loadCurrentValues();
@@ -219,6 +220,7 @@ void RmlOptionsScreen::loadCurrentValues()
 {
 	const auto &interfaceValues = RmlInterfaceSettings::current();
 	m_model.uiScale = interfaceValues.scalePercent;
+	m_model.controlBarScale = interfaceValues.controlBarScalePercent;
 	m_model.uiTheme = interfaceValues.darkTheme ? 1 : 0;
 	m_customThemes = RmlInterfaceSettings::themeFiles();
 	m_backgroundImages = RmlInterfaceSettings::backgroundFiles();
@@ -234,6 +236,9 @@ void RmlOptionsScreen::loadCurrentValues()
 	m_model.musicVolume = OptionsValues::GetCurrentMusicVolumePercent();
 	m_model.sfxVolume = OptionsValues::GetCurrentSFXVolumePercent();
 	m_model.voiceVolume = OptionsValues::GetCurrentVoiceVolumePercent();
+	m_initialMusicVolume = m_model.musicVolume;
+	m_initialSfxVolume = m_model.sfxVolume;
+	m_initialVoiceVolume = m_model.voiceVolume;
 	m_model.alternateMouse = OptionsValues::GetCurrentAlternateMouse();
 	m_model.retaliation = OptionsValues::GetCurrentRetaliation();
 	m_model.doubleClickAttackMove = OptionsValues::GetCurrentDoubleClickAttackMove();
@@ -269,6 +274,7 @@ void RmlOptionsScreen::loadCurrentValues()
 void RmlOptionsScreen::loadDefaultValues()
 {
 	m_model.uiScale = 100;
+	m_model.controlBarScale = 100;
 	m_model.uiTheme = 0;
 	m_model.customThemeIndex = 0;
 	m_model.enableBackground = false;
@@ -304,9 +310,12 @@ bool RmlOptionsScreen::applyAndSave()
 		OptionsValues::ApplySendDelay(*m_pref, m_model.sendDelay);
 
 	OptionsValues::ApplyScrollSpeedPercent(*m_pref, m_model.scrollSpeed);
-	OptionsValues::ApplyMusicVolumePercent(*m_pref, m_model.musicVolume);
-	OptionsValues::ApplySFXVolumePercent(*m_pref, m_model.sfxVolume);
-	OptionsValues::ApplyVoiceVolumePercent(*m_pref, m_model.voiceVolume);
+	if (m_model.musicVolume != m_initialMusicVolume)
+		OptionsValues::ApplyMusicVolumePercent(*m_pref, m_model.musicVolume);
+	if (m_model.sfxVolume != m_initialSfxVolume)
+		OptionsValues::ApplySFXVolumePercent(*m_pref, m_model.sfxVolume);
+	if (m_model.voiceVolume != m_initialVoiceVolume)
+		OptionsValues::ApplyVoiceVolumePercent(*m_pref, m_model.voiceVolume);
 	OptionsValues::ApplyMouseOptions(*m_pref, m_model.alternateMouse, m_model.retaliation, m_model.doubleClickAttackMove);
 	OptionsValues::ApplyTextLanguageChoice(m_model.textLanguage);
 	OptionsValues::ApplyInterfaceWidth(m_model.interfaceWidth); // RmlUiManager::update() applies it to every open screen
@@ -434,6 +443,7 @@ bool RmlOptionsScreen::saveInterfaceValues()
 {
     RmlInterfaceSettings::Values next;
     next.scalePercent = m_model.uiScale;
+    next.controlBarScalePercent = m_model.controlBarScale;
     next.darkTheme = m_model.uiTheme == 1;
     next.enableBackground = m_model.enableBackground;
     next.hideBorder = m_model.hideBorder;
