@@ -476,3 +476,72 @@ body.ld
 	letter-spacing: 3dp;
 	border-right: 1dp #898A8B46;
 }
+
+.ld-concept .ld-art { pointer-events: none; }
+.ld-concept .ld-heading { border-left-color: #C8C9CA; background-color: #1B1C1EEB; }
+.ld-concept .ld-mode { color: #C8C9CA; }
+.ld-concept .ld-title { font-size: 44dp; line-height: 52dp; }
+.ld-concept .ld-general
+{
+    align-items: flex-start;
+    flex-basis: 560dp;
+    padding: 20dp;
+    background-color: #1B1C1EEB;
+    border: 1dp #454648B0;
+    border-radius: 12dp;
+}
+.ld-concept .ld-portrait, .ld-concept .ld-portrait mappedimage { width: 96dp; height: 96dp; }
+.ld-general-features { white-space: normal; }
+.ld-feature-line { display: flex; flex-direction: row; align-items: flex-start; margin-top: 5dp; }
+.ld-feature-line span { white-space: normal; }
+.ld-feature-bullet { flex: 0 0 14dp; color: #C8C9CA; }
+.ld-concept .ld-general-features { font-size: 16dp; line-height: 22dp; color: #B5B6B8; }
+.ld-concept .ld-mid { align-items: center; }
+.ld-concept .ld-map-card { flex: 0 0 auto; background-color: #1B1C1EEB; border: 1dp #454648B0; border-radius: 12dp; }
+.ld-concept .ld-map-frame { width: 300dp; height: 300dp; }
+.ld-tip-card
+{
+    display: block;
+    flex: 0 1 880dp;
+    min-width: 0;
+    max-height: 100%;
+    overflow: auto;
+    padding: 26dp;
+    margin-right: 28dp;
+    box-sizing: border-box;
+    background-color: #1B1C1EEB;
+    border: 1dp #454648B0;
+    border-radius: 12dp;
+}
+.ld-tip-faction { display: block; font-size: 14dp; line-height: 20dp; letter-spacing: 2dp; color: #C8C9CA; }
+.ld-tip-heading { display: flex; flex-direction: row; align-items: center; margin-top: 16dp; }
+.ld-tip-icon { flex: 0 0 auto; width: 88dp; height: 66dp; margin-right: 20dp; }
+.ld-tip-icon mappedimage { display: block; width: 100%; height: 100%; }
+.ld-tip-title { flex: 1 1 0%; min-width: 0; font-size: 30dp; line-height: 38dp; font-weight: normal; color: #F2F2F0; }
+.ld-tip-cost { margin-left: 20dp; font-size: 24dp; line-height: 32dp; color: #F2F2F0; }
+.ld-tip-advice { display: block; margin-top: 18dp; font-size: 20dp; line-height: 29dp; color: #E0E2E8; white-space: pre-line; }
+.ld-tip-game { display: block; margin-top: 22dp; padding-top: 16dp; border-top: 1dp #454648B0; }
+.ld-tip-game-label { display: block; font-size: 12dp; line-height: 18dp; letter-spacing: 1dp; color: #C8C9CA; }
+.ld-tip-description { display: block; margin-top: 8dp; font-size: 16dp; line-height: 24dp; color: #B5B6B8; white-space: pre-line; }
+@media (max-aspect-ratio: 3/2)
+{
+    .ld-concept .ld-title { font-size: 34dp; line-height: 42dp; }
+    .ld-concept .ld-general { flex-basis: 460dp; }
+    .ld-concept .ld-map-frame { width: 240dp; height: 240dp; }
+    .ld-tip-card { padding: 20dp; margin-right: 20dp; }
+    .ld-tip-title { font-size: 25dp; line-height: 32dp; }
+    .ld-tip-advice { font-size: 18dp; line-height: 26dp; }
+}
+
+.ld-tip-author
+{
+    display: block;
+    margin-top: 16dp;
+    font-family: "Exo 2";
+    font-weight: bold;
+    font-size: 12dp;
+    line-height: 18dp;
+    letter-spacing: 1dp;
+    text-align: right;
+    color: #9FA1A4;
+}

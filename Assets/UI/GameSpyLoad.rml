@@ -5,9 +5,8 @@
 	<link type="text/rcss" href="LoadScreen.rcss"/>
 	<link type="text/rcss" href="GameSpyLoad.rcss"/>
 </head>
-<body class="screen ld" data-model="onlineload">
-	<div class="ld-art"><mappreview class="ld-map-art" fit="fill" data-attr-map="map_name" data-if="has_map"/><mappedimage class="ld-fallback-art" data-if="!has_map" name="MDSkirmishLoadB"/></div>
-	<div class="ld-scrim"></div>
+<body class="screen ld ld-concept" data-model="onlineload">
+	<loadbackdrop class="ld-art"></loadbackdrop>
 	<div class="screen-ruler"><div class="rs rs-top"><div></div><div></div><div></div><div></div></div><div class="rs rs-bottom"><div></div><div></div><div></div><div></div></div><div class="rs rs-left"><div></div><div></div></div><div class="rs rs-right"><div></div><div></div></div><div class="rc rc-tl"><div></div></div><div class="rc rc-tr"><div></div></div><div class="rc rc-bl"><div></div></div><div class="rc rc-br"><div></div></div></div>
 
 	<div class="screen-frame ld-frame">
@@ -22,13 +21,27 @@
 					<div class="ld-portrait" data-if="has_portrait"><mappedimage data-attr-name="local_portrait"/></div>
 					<div class="ld-general-text">
 						<div class="ld-general-name">{{local_name}}</div>
-						<div class="ld-general-features">{{local_features}}</div>
+						<div class="ld-general-features"><div class="ld-feature-line" data-for="feature : local_feature_lines"><span class="ld-feature-bullet">&#8226;</span><span>{{feature}}</span></div></div>
 					</div>
 				</div>
 		</div>
 
 		<div class="ld-mid">
-			<div class="spacer"></div>
+            <div class="ld-tip-card" data-if="has_tip">
+                <div class="ld-tip-faction">{{tip_faction}}</div>
+                <div class="ld-tip-heading">
+                    <div class="ld-tip-icon" data-if="has_tip_image"><mappedimage data-attr-name="tip_image"/></div>
+                    <div class="ld-tip-title">{{tip_title}}</div>
+                    <div class="ld-tip-cost" data-if="has_tip_cost">{{tip_cost}}</div>
+                </div>
+                <div class="ld-tip-advice">{{tip_advice}}</div>
+                <div class="ld-tip-game" data-if="tip_description != ''">
+                    <div class="ld-tip-game-label">IN-GAME DESCRIPTION</div>
+                    <div class="ld-tip-description">{{tip_description}}</div>
+                </div>
+                <div class="ld-tip-author" data-if="tip_author != ''">BY {{tip_author}}</div>
+            </div>
+            <div class="spacer"></div>
 			<div class="surface ld-map-card" data-if="has_map">
 				<div class="map-frame ld-map-frame">
 					<mappreview class="map-image" data-attr-map="map_name">
