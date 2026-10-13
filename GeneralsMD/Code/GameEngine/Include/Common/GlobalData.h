@@ -136,6 +136,7 @@ public:
 	Bool m_rmlIgnoreModWnds;
 
 	Bool m_d3d8RmlUiFix;
+	Bool m_tipsDebug;
 
 	// -rmlwnd MainMenu,QuitMenu sends those screens back to their .wnd, as a mod's would (to test the fallback).
 	AsciiString m_rmlForceWnds;

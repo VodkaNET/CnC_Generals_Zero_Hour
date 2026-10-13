@@ -18,6 +18,7 @@
 
 #include "W3DDevice/GameClient/RmlUi/RmlLoadScreen.h"
 #include "Common/UnicodeUtf8.h"
+#include "Common/GlobalData.h"
 
 #include "GameClient/LoadScreenData.h"
 #include "W3DDevice/GameClient/RmlUi/RmlUiElements.h"
@@ -26,8 +27,10 @@
 #include "W3DDevice/GameClient/RmlUi/RmlModelPreview.h"
 
 #include <RmlUi/Core/Context.h>
+#include <RmlUi/Core/Core.h>
 #include <RmlUi/Core/DataModelHandle.h>
 #include <RmlUi/Core/ElementDocument.h>
+#include <RmlUi/Core/SystemInterface.h>
 
 #include <cstdio>
 #include <sstream>
@@ -75,6 +78,11 @@ void RmlLoadScreen::tick()
 	for (int i = 0; i < KIND_COUNT; ++i)
 	{
 		RmlLoadScreen &screen = instance((Kind)i);
+        if (screen.m_closeDeadline > 0)
+        {
+            if (Rml::GetSystemInterface()->GetElapsedTime() >= screen.m_closeDeadline) screen.closeImmediately();
+            continue;
+        }
 		if (screen.isVisible() && screen.m_seenVersion != LoadScreenData::instance().m_version)
 			screen.refresh();
 	}
@@ -367,6 +375,7 @@ void RmlLoadScreen::open()
 	if (!m_document)
 		return;
 
+	m_closeDeadline = 0;
 	m_localSide = LoadScreenData::instance().m_localSide.str();
 	m_tipIndex = RmlLoadingTips::select(m_localSide);
 	refresh();
@@ -375,6 +384,23 @@ void RmlLoadScreen::open()
 
 void RmlLoadScreen::close()
 {
+    if (m_closeDeadline > 0) return;
+    const auto &data = LoadScreenData::instance();
+    bool complete = data.m_rowCount > 0;
+    for (Int i = 0; i < data.m_rowCount; ++i)
+        if (data.m_rows[i].m_showProgress && data.m_rows[i].m_progress < 100) complete = false;
+    const bool tipScreen = std::string(m_modelName) == "multiplayerload" || std::string(m_modelName) == "onlineload";
+    if (TheGlobalData && TheGlobalData->m_tipsDebug && tipScreen && complete && isVisible())
+    {
+        m_closeDeadline = Rml::GetSystemInterface()->GetElapsedTime() + 5.0;
+        return;
+    }
+    closeImmediately();
+}
+
+void RmlLoadScreen::closeImmediately()
+{
+    m_closeDeadline = 0;
 	// the LoadScreen deletes its movies right after; a later load screen publishes its own
 	for (Int i = 0; i < LOAD_VIDEO_COUNT; ++i)
 		RmlVideoElement::setSource(s_videoSources[i], nullptr);

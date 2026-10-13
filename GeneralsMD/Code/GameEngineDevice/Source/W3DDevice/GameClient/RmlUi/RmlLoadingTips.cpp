@@ -12,7 +12,7 @@
 #include "GameClient/Image.h"
 #include <algorithm>
 #include <cctype>
-#include <map>
+#include <random>
 #include <sstream>
 #include <vector>
 
@@ -25,7 +25,8 @@ struct Entry
     std::string faction, title, advice, author, command, object, upgrade, relatedObject, descriptionLabel;
 };
 std::vector<Entry> entries;
-std::map<std::string, std::size_t> cursors;
+std::size_t lastSelected = std::string::npos;
+std::mt19937 tipRandom(std::random_device{}());
 bool loaded = false;
 std::string trim(std::string value)
 {
@@ -120,7 +121,11 @@ std::size_t select(const std::string &side)
         if (faction.empty() || entries[i].faction == faction || entries[i].faction == "ALL") candidates.push_back(i);
     if (candidates.empty())
         for (std::size_t i = 0; i < entries.size(); ++i) candidates.push_back(i);
-    return candidates[cursors[faction]++ % candidates.size()];
+    if (candidates.size() > 1)
+        candidates.erase(std::remove(candidates.begin(), candidates.end(), lastSelected), candidates.end());
+    std::uniform_int_distribution<std::size_t> pick(0, candidates.size() - 1);
+    lastSelected = candidates[pick(tipRandom)];
+    return lastSelected;
 }
 
 Tip resolve(std::size_t index, const std::string &side)

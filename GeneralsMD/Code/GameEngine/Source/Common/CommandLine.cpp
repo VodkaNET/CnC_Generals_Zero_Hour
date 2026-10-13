@@ -189,6 +189,12 @@ Int parseRmlIgnoreModWnds(char *args[], int num)
 	return 1;
 }
 
+Int parseTipsDebug(char *args[], int num)
+{
+    TheWritableGlobalData->m_tipsDebug = TRUE;
+    return 1;
+}
+
 Int parseD3D8RmlUiFix(char *args[], int num)
 {
 	TheWritableGlobalData->m_d3d8RmlUiFix = TRUE;
@@ -1243,6 +1249,7 @@ static CommandLineParam paramsForEngineInit[] =
 	{ "-wnd", parseUseLegacyMenus },
 	{ "-rmlignoremodwnd", parseRmlIgnoreModWnds },
 	{ "-d3d8_rmlui_fix", parseD3D8RmlUiFix },
+	{ "-tips_debug", parseTipsDebug },
 	{ "-rmlwnd", parseRmlForceWnds },
 
 	// TheSuperHackers @feature RmlUi phase 2: show Rml::Debugger over RmlUi screens.

@@ -682,6 +682,7 @@ GlobalData::GlobalData()
 	m_useLegacyMenus = FALSE;
 	m_rmlIgnoreModWnds = FALSE;
 	m_d3d8RmlUiFix = FALSE;
+	m_tipsDebug = FALSE;
 	m_rmlForceWnds.clear();
 	m_rmlDebugger = FALSE;
 	m_exportStats = FALSE;

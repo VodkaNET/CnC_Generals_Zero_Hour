@@ -44,7 +44,7 @@ public:
 
 	static RmlLoadScreen &instance(Kind kind);
 	// RmlUiManager::shutdown(): Rml::Shutdown() frees the document and context, and this outlives them.
-	void releaseRml() { m_document = nullptr; m_context = nullptr; m_modelHandle = Rml::DataModelHandle(); }
+	void releaseRml() { m_document = nullptr; m_context = nullptr; m_modelHandle = Rml::DataModelHandle(); m_closeDeadline = 0; }
 	static void tick(); ///< refreshes every open instance whose LoadScreenData changed
 
 	void open();
@@ -56,6 +56,7 @@ public:
 private:
 	void load(Rml::Context *context);
 	void refresh();
+	void closeImmediately();
 
 	struct RowModel
 	{
@@ -110,6 +111,7 @@ private:
 	Rml::ElementDocument *m_document = nullptr;
 	Rml::DataModelHandle m_modelHandle;
 	unsigned int m_seenVersion = 0;
+	double m_closeDeadline = 0;
 
 	Rml::Vector<RowModel> m_rows;
 	Rml::Vector<MarkerModel> m_markers;
