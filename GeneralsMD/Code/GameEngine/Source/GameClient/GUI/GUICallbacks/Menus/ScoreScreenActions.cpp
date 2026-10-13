@@ -54,6 +54,15 @@
 namespace ScoreScreenActions
 {
 
+std::uint64_t currentMatchId()
+{
+    if (!NGMP_OnlineServicesManager::GetInstance()) return 0;
+    auto *lobby = NGMP_OnlineServicesManager::GetInterface<NGMP_OnlineServices_LobbyInterface>();
+    return lobby ? lobby->GetCurrentMatchID() : 0;
+}
+
+
+
 //-------------------------------------------------------------------------------------------------
 void pressOk()
 {

@@ -79,6 +79,7 @@ struct ScoreScreenPlayerRow
 	// The general's badge (PlayerTemplate GeneralImage, else the side icon), for front ends that
 	// draw a faction badge per row.
 	const Image *m_badgeImage = nullptr;
+    const Image *m_portraitImage = nullptr;
 
 	// Multiplayer rows only: this player and his allies won (VictoryConditions::hasAchievedVictory).
 	Bool m_isVictor = FALSE;

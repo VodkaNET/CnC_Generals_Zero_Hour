@@ -47,7 +47,15 @@ namespace
 		return Rml::String(hex);
 	}
 
-	Rml::String formatGameTime(UnsignedInt seconds)
+	Rml::String formatStat(int value)
+    {
+        Rml::String text = std::to_string(value);
+        const int first = value < 0 ? 1 : 0;
+        for (int i = int(text.size()) - 3; i > first; i -= 3) text.insert(i, ",");
+        return text;
+    }
+
+    Rml::String formatGameTime(UnsignedInt seconds)
 	{
 		char text[32];
 		if (seconds >= 3600)
@@ -81,6 +89,7 @@ void RmlScoreScreen::load(Rml::Context *context)
 		if (rowHandle)
 		{
 			rowHandle.RegisterMember("display_name", &RowModel::displayName);
+            rowHandle.RegisterMember("portrait_image", &RowModel::portraitImage);
 			rowHandle.RegisterMember("is_observer", &RowModel::isObserver);
 			rowHandle.RegisterMember("money_earned", &RowModel::moneyEarned);
 			rowHandle.RegisterMember("units_built", &RowModel::unitsBuilt);
@@ -89,6 +98,13 @@ void RmlScoreScreen::load(Rml::Context *context)
 			rowHandle.RegisterMember("buildings_built", &RowModel::buildingsBuilt);
 			rowHandle.RegisterMember("buildings_lost", &RowModel::buildingsLost);
 			rowHandle.RegisterMember("buildings_destroyed", &RowModel::buildingsDestroyed);
+            rowHandle.RegisterMember("money_earned_text", &RowModel::moneyEarnedText);
+            rowHandle.RegisterMember("units_built_text", &RowModel::unitsBuiltText);
+            rowHandle.RegisterMember("units_lost_text", &RowModel::unitsLostText);
+            rowHandle.RegisterMember("units_destroyed_text", &RowModel::unitsDestroyedText);
+            rowHandle.RegisterMember("buildings_built_text", &RowModel::buildingsBuiltText);
+            rowHandle.RegisterMember("buildings_lost_text", &RowModel::buildingsLostText);
+            rowHandle.RegisterMember("buildings_destroyed_text", &RowModel::buildingsDestroyedText);
 			rowHandle.RegisterMember("side_icon_image", &RowModel::sideIconImage);
 			rowHandle.RegisterMember("show_side_icon", &RowModel::showSideIcon);
 			rowHandle.RegisterMember("badge_image", &RowModel::badgeImage);
@@ -114,6 +130,12 @@ void RmlScoreScreen::load(Rml::Context *context)
 		constructor.RegisterArray<Rml::Vector<Rml::String>>();
 
 		constructor.Bind("rows", &m_model.rows);
+        constructor.Bind("has_local_summary", &m_model.hasLocalSummary);
+        constructor.Bind("local_kills", &m_model.localKills);
+        constructor.Bind("local_losses", &m_model.localLosses);
+        constructor.Bind("local_buildings", &m_model.localBuildings);
+        constructor.Bind("local_supplies", &m_model.localSupplies);
+        constructor.Bind("match_id", &m_model.matchId);
 		constructor.Bind("highlights", &m_model.highlights);
 		constructor.Bind("mode", &m_model.mode);
 		constructor.Bind("is_victory", &m_model.isVictory);
@@ -195,11 +217,14 @@ void RmlScoreScreen::refreshFromGameState()
 	ScoreScreenLayout layout = ScoreScreenLayout::forMode(m_mode);
 
 	m_model.rows.clear();
+    m_model.hasLocalSummary = false;
+    m_model.matchId.clear();
 	m_model.academyAdvice.clear();
 	for (const ScoreScreenPlayerRow &row : data.m_rows)
 	{
 		RowModel rowModel;
 		rowModel.displayName = unicodeToUtf8(row.m_displayName);
+        rowModel.portraitImage = row.m_portraitImage ? row.m_portraitImage->getName().str() : Rml::String();
 		rowModel.isObserver = row.m_isObserver == TRUE;
 		rowModel.moneyEarned = row.m_stats.m_totalMoneyEarned;
 		rowModel.unitsBuilt = row.m_stats.m_totalUnitsBuilt;
@@ -208,6 +233,21 @@ void RmlScoreScreen::refreshFromGameState()
 		rowModel.buildingsBuilt = row.m_stats.m_totalBuildingsBuilt;
 		rowModel.buildingsLost = row.m_stats.m_totalBuildingsLost;
 		rowModel.buildingsDestroyed = row.m_stats.m_totalBuildingsDestroyed;
+        rowModel.moneyEarnedText = rowModel.isObserver ? "\xE2\x80\x94" : formatStat(rowModel.moneyEarned);
+        rowModel.unitsBuiltText = rowModel.isObserver ? "\xE2\x80\x94" : formatStat(rowModel.unitsBuilt);
+        rowModel.unitsLostText = rowModel.isObserver ? "\xE2\x80\x94" : formatStat(rowModel.unitsLost);
+        rowModel.unitsDestroyedText = rowModel.isObserver ? "\xE2\x80\x94" : formatStat(rowModel.unitsDestroyed);
+        rowModel.buildingsBuiltText = rowModel.isObserver ? "\xE2\x80\x94" : formatStat(rowModel.buildingsBuilt);
+        rowModel.buildingsLostText = rowModel.isObserver ? "\xE2\x80\x94" : formatStat(rowModel.buildingsLost);
+        rowModel.buildingsDestroyedText = rowModel.isObserver ? "\xE2\x80\x94" : formatStat(rowModel.buildingsDestroyed);
+        if (row.m_isLocalPlayerRow && !rowModel.isObserver)
+        {
+            m_model.hasLocalSummary = true;
+            m_model.localKills = rowModel.unitsDestroyedText;
+            m_model.localLosses = rowModel.unitsLostText;
+            m_model.localBuildings = rowModel.buildingsDestroyedText;
+            m_model.localSupplies = rowModel.moneyEarnedText;
+        }
 		if (row.m_touchSideIcon && row.m_sideIconImage)
 		{
 			rowModel.sideIconImage = row.m_sideIconImage->getName().str();
@@ -242,6 +282,11 @@ void RmlScoreScreen::refreshFromGameState()
 	m_model.showChatLog = layout.m_showChatLog == TRUE;
 	m_model.showBuddiesButton = layout.m_showBuddiesButton == TRUE;
 	m_model.showContinueButton = layout.m_showContinueButton == TRUE;
+    if (m_mode == SCORESCREENMODE_INTERNET)
+    {
+        if (const auto id = ScoreScreenActions::currentMatchId()) m_model.matchId = std::to_string(id);
+        m_model.showContinueButton = !m_model.matchId.empty();
+    }
 	m_model.showDefaultContinueLabel = layout.m_continueButtonCaption.isEmpty();
 	m_model.continueButtonCaption = m_model.showDefaultContinueLabel ? Rml::String() : unicodeToUtf8(layout.m_continueButtonCaption);
 	m_model.showAcademyPanel = layout.m_touchAcademyPanel == TRUE && layout.m_showAcademyPanel == TRUE;

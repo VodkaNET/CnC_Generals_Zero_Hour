@@ -47,6 +47,7 @@
 #include <RmlUi/Core/CallbackTexture.h>
 #include <RmlUi/Core/Element.h>
 #include <RmlUi/Core/Geometry.h>
+#include <RmlUi/Core/Texture.h>
 
 class MapMetaData;
 class VideoBuffer;
@@ -197,5 +198,20 @@ protected:
 private:
     Rml::Vector2f m_size;
     bool m_dark = false;
+    Rml::Geometry m_geometry;
+};
+
+class RmlFadedPortraitElement : public Rml::Element
+{
+public:
+    explicit RmlFadedPortraitElement(const Rml::String &tag) : Rml::Element(tag) {}
+protected:
+    void OnRender() override;
+private:
+    Rml::String m_image;
+    Rml::Vector2f m_size;
+    float m_opacity = -1.0f;
+    Rml::UniquePtr<Rml::TextureSource> m_source;
+    Rml::Texture m_texture;
     Rml::Geometry m_geometry;
 };

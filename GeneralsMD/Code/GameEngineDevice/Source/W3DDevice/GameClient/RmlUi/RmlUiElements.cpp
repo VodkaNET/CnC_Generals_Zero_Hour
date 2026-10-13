@@ -584,3 +584,65 @@ void RmlLoadBackdropElement::OnRender()
     }
     m_geometry.Render(GetAbsoluteOffset(Rml::BoxArea::Content));
 }
+
+void RmlFadedPortraitElement::OnRender()
+{
+    Rml::Element::OnRender();
+    const auto name = GetAttribute<Rml::String>("name", "");
+    const auto size = GetBox().GetSize(Rml::BoxArea::Content);
+    const float opacity = GetComputedValues().opacity();
+    if (name.empty() || size.x <= 0 || size.y <= 0 || !TheMappedImageCollection) return;
+    const Image *image = TheMappedImageCollection->findImageByName(AsciiString(name.c_str()));
+    if (!image) return;
+    if (name != m_image)
+    {
+        m_source.reset(new Rml::TextureSource("/" + Rml::String(image->getFilename().str()), ""));
+        m_texture = m_source->GetTexture(*GetRenderManager());
+        m_image = name;
+        m_geometry = {};
+    }
+    if (!m_texture) return;
+    if (!m_geometry || m_size != size || m_opacity != opacity)
+    {
+        m_size = size;
+        m_opacity = opacity;
+        const auto *uv = image->getUV();
+        const auto *dimensions = image->getTextureSize();
+        float left = uv->lo.x, right = uv->hi.x, top = uv->lo.y, bottom = uv->hi.y;
+        const float sourceAspect = (right - left) * dimensions->x / ((bottom - top) * dimensions->y);
+        const float targetAspect = size.x / size.y;
+        if (targetAspect > sourceAspect)
+        {
+            const float height = (bottom - top) * sourceAspect / targetAspect;
+            top += ((bottom - top) - height) * 0.2f;
+            bottom = top + height;
+        }
+        else
+        {
+            const float width = (right - left) * targetAspect / sourceAspect;
+            left += ((right - left) - width) * 0.5f;
+            right = left + width;
+        }
+        Rml::Mesh mesh;
+        for (int x = 0; x <= 24; ++x)
+        {
+            const float u = float(x) / 24;
+            const auto colour = Rml::Colourb(255, 255, 255, 255).ToPremultiplied(opacity * u * u);
+            Rml::Vertex upper, lower;
+            upper.position = {u * size.x, 0};
+            lower.position = {u * size.x, size.y};
+            upper.tex_coord = {left + (right - left) * u, top};
+            lower.tex_coord = {left + (right - left) * u, bottom};
+            upper.colour = lower.colour = colour;
+            mesh.vertices.push_back(upper);
+            mesh.vertices.push_back(lower);
+            if (x < 24)
+            {
+                const int a = x * 2;
+                mesh.indices.insert(mesh.indices.end(), {a, a + 1, a + 2, a + 2, a + 1, a + 3});
+            }
+        }
+        m_geometry = GetRenderManager()->MakeGeometry(std::move(mesh));
+    }
+    m_geometry.Render(GetAbsoluteOffset(Rml::BoxArea::Content), m_texture);
+}

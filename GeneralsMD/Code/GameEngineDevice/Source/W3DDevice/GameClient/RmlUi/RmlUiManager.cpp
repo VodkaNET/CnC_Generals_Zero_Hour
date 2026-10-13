@@ -475,6 +475,8 @@ void RmlUiManager::registerCustomElements()
 	Rml::Factory::RegisterElementInstancer("productionclock", m_productionClockInstancer);
 	m_loadBackdropInstancer = new Rml::ElementInstancerGeneric<RmlLoadBackdropElement>();
 	Rml::Factory::RegisterElementInstancer("loadbackdrop", m_loadBackdropInstancer);
+    m_fadedPortraitInstancer = new Rml::ElementInstancerGeneric<RmlFadedPortraitElement>();
+    Rml::Factory::RegisterElementInstancer("fadedportrait", m_fadedPortraitInstancer);
 	m_modelPreviewInstancer = new Rml::ElementInstancerGeneric<RmlModelPreviewElement>();
 	Rml::Factory::RegisterElementInstancer("modelpreview", m_modelPreviewInstancer);
 }
@@ -518,6 +520,7 @@ void RmlUiManager::shutdown()
 	delete m_radarInstancer; m_radarInstancer = nullptr;
 	delete m_productionClockInstancer; m_productionClockInstancer = nullptr;
 	delete m_loadBackdropInstancer; m_loadBackdropInstancer = nullptr;
+	delete m_fadedPortraitInstancer; m_fadedPortraitInstancer = nullptr;
 	delete m_modelPreviewInstancer; m_modelPreviewInstancer = nullptr;
 	m_currentScreen = nullptr;
 	TransitionSounds::reset();

@@ -103,6 +103,7 @@ private:
 	struct RowModel
 	{
 		Rml::String displayName;
+        Rml::String portraitImage;
 		bool isObserver = false;
 		int moneyEarned = 0;
 		int unitsBuilt = 0;
@@ -111,6 +112,8 @@ private:
 		int buildingsBuilt = 0;
 		int buildingsLost = 0;
 		int buildingsDestroyed = 0;
+		Rml::String moneyEarnedText, unitsBuiltText, unitsLostText, unitsDestroyedText;
+		Rml::String buildingsBuiltText, buildingsLostText, buildingsDestroyedText;
 		Rml::String sideIconImage; // mapped image name; empty means no icon
 		bool showSideIcon = false;
 		Rml::String badgeImage; // the general's badge, empty means none
@@ -139,6 +142,8 @@ private:
 	{
 		Rml::Vector<RowModel> rows;
 		Rml::Vector<HighlightModel> highlights;
+		bool hasLocalSummary = false;
+		Rml::String localKills, localLosses, localBuildings, localSupplies, matchId;
 
 		// The match header: mode (ScoreScreenModeType), the local side's outcome, map and length.
 		int mode = 0;

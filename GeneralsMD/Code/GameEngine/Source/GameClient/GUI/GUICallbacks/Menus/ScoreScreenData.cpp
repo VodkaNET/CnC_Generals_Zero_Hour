@@ -36,6 +36,7 @@
 #include "Common/Player.h"
 #include "Common/PlayerList.h"
 #include "Common/PlayerTemplate.h"
+#include "GameClient/ChallengeGenerals.h"
 #include "Common/ReplaySimulation.h"
 #include "Common/ScoreKeeper.h"
 #include "Common/SkirmishBattleHonors.h"
@@ -945,6 +946,17 @@ void gatherPlayerRow(Player *player, ScoreScreenModeType mode, Bool overrideDisp
 	{
 		row.m_sideIconImage = fact->getSideIconImage();
 		row.m_badgeImage = fact->getGeneralImage() ? fact->getGeneralImage() : fact->getSideIconImage();
+        const auto *general = TheChallengeGenerals ? TheChallengeGenerals->getGeneralByTemplateName(fact->getName()) : nullptr;
+        row.m_portraitImage = general ? general->getBioPortraitLarge() : nullptr;
+        if (!general && TheMappedImageCollection)
+        {
+            if (fact->getName() == "FactionAmerica")
+                row.m_portraitImage = TheMappedImageCollection->findImageByName("SAFactionLogoLg_US");
+            else if (fact->getName() == "FactionGLA")
+                row.m_portraitImage = TheMappedImageCollection->findImageByName("SUFactionLogoLg_GLA");
+            else if (fact->getName() == "FactionChina")
+                row.m_portraitImage = TheMappedImageCollection->findImageByName("SNFactionLogoLg_China");
+        }
 	}
 
 	if (mode != SCORESCREENMODE_SINGLEPLAYER)

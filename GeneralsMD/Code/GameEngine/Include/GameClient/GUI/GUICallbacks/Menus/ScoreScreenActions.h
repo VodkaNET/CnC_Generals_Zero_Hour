@@ -28,6 +28,8 @@
 
 #include "GameClient/GUI/GUICallbacks/Menus/ScoreScreenData.h" // ScoreScreenModeType
 
+#include <cstdint>
+
 class UnicodeString;
 
 namespace ScoreScreenActions
@@ -35,6 +37,7 @@ namespace ScoreScreenActions
 	// ButtonOk: close the buddy overlay, pop the score screen, clear the campaign, and
 	// stop simulation replay playback if one was running.
 	void pressOk();
+    std::uint64_t currentMatchId();
 
 	// ButtonContinue: quits out of simulation replay playback if one is running; otherwise
 	// marks the continue press (unless we're finishing a campaign) and, in single player
