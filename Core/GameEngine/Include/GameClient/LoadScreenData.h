@@ -64,6 +64,7 @@ struct LoadScreenPlayerRow
 	AsciiString m_rankImage; ///< mapped image names, empty for none
 	AsciiString m_medalImage;
 	AsciiString m_sideImage; ///< faction badge (the army's general image, else its side icon), empty for random
+    AsciiString m_portraitImage;
 	UnsignedInt m_color = 0xFFFFFF; ///< 0x00RRGGBB
 	Int m_colorIndex = 0; ///< slot's apparent color index, for the legacy house-colored bar
 	Int m_progress = 0; ///< 0..100

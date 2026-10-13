@@ -168,6 +168,8 @@ private:
 		Rml::String observerKills;
 		Rml::String observerLosses;
 		Rml::Vector<SlotModel> observerButtons;
+		bool mobileActionsOpen = false;
+		bool mobileGroupsOpen = false;
 		bool replay = false;
 	};
 
@@ -179,6 +181,9 @@ private:
 	ControlBarData m_data;		///< this frame's snapshot
 	ControlBarData m_shown;		///< what the model holds
 	bool m_hasShown = false;
+	bool m_mobilePreset = false;
+	void onMobileGroup(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &);
+	void onMobileAction(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &);
 
 	// the pointer on a button, as the window manager tracks it for the .wnd buttons
 	bool m_hovering = false;

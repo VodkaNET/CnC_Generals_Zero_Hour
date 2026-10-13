@@ -104,6 +104,9 @@ private:
 	{
 		Rml::String tab = "video";
 
+		bool mobileMode = false;
+		bool mobileUi = false;
+		int mobileMinimapScale = 100;
 		int uiScale = 100;
 		int controlBarScale = 100;
 		int uiTheme = 0;

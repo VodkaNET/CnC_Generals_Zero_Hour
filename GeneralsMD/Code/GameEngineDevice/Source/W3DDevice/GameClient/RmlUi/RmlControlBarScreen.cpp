@@ -218,8 +218,26 @@ RmlControlBarScreen &RmlControlBarScreen::instance()
 
 void RmlControlBarScreen::load(Rml::Context *context)
 {
-	if (m_document || !context)
-		return;
+	if (!context) return;
+    const bool mobile = RmlInterfaceSettings::current().mobileUi;
+    if (m_document && m_mobilePreset == mobile) return;
+    if (m_document)
+    {
+        hide();
+        m_document->RemoveEventListener(Rml::EventId::Mousedown, this);
+        m_document->RemoveEventListener(Rml::EventId::Mouseup, this);
+        m_document->RemoveEventListener(Rml::EventId::Mousemove, this);
+        m_document->Close();
+        m_document = nullptr;
+        m_hasShown = false;
+        m_beaconFocused = false;
+        m_onSciencePanel = false;
+    }
+    m_mobilePreset = mobile;
+    m_model.mobileActionsOpen = false;
+    m_model.mobileGroupsOpen = false;
+    if (m_modelHandle) m_modelHandle.DirtyVariable("mobile_groups_open");
+    if (m_modelHandle) m_modelHandle.DirtyVariable("mobile_actions_open");
 
 	m_context = context;
 	m_model.commands.resize(CONTROL_BAR_VISIBLE_COMMANDS);
@@ -232,7 +250,7 @@ void RmlControlBarScreen::load(Rml::Context *context)
 	m_model.observerPlayers.resize(CB_OBSERVER_PLAYERS);
 	m_model.observerButtons.resize(CB_OBSERVER_PLAYERS + 1);
 
-	Rml::DataModelConstructor constructor = context->CreateDataModel("controlbar");
+	Rml::DataModelConstructor constructor = m_modelHandle ? Rml::DataModelConstructor() : context->CreateDataModel("controlbar");
 	if (constructor)
 	{
 		if (Rml::StructHandle<SlotModel> slot = constructor.RegisterStruct<SlotModel>())
@@ -326,13 +344,17 @@ void RmlControlBarScreen::load(Rml::Context *context)
 		constructor.Bind("observer_kills", &m_model.observerKills);
 		constructor.Bind("observer_losses", &m_model.observerLosses);
 		constructor.Bind("observer_buttons", &m_model.observerButtons);
+		constructor.Bind("mobile_groups_open", &m_model.mobileGroupsOpen);
+		constructor.BindEventCallback("mobile_group", &RmlControlBarScreen::onMobileGroup, this);
+		constructor.Bind("mobile_actions_open", &m_model.mobileActionsOpen);
 		constructor.Bind("replay", &m_model.replay);
+		constructor.BindEventCallback("mobile_action", &RmlControlBarScreen::onMobileAction, this);
 		constructor.BindEventCallback("beacon_change", &RmlControlBarScreen::onBeaconChange, this);
 
 		m_modelHandle = constructor.GetModelHandle();
 	}
 
-	m_document = context->LoadDocument("UI/ControlBar.rml");
+	m_document = context->LoadDocument(m_mobilePreset ? "UI/Mobile/ControlBar.rml" : "UI/ControlBar.rml");
 	if (m_document)
 	{
 		m_document->AddEventListener(Rml::EventId::Mousedown, this);
@@ -372,6 +394,7 @@ void RmlControlBarScreen::show()
 
 void RmlControlBarScreen::hide()
 {
+    if (TheInGameUI) TheInGameUI->setMessagePositionOverride(-1, -1);
 	if (m_hovering && TheControlBar)
 		ControlBarActions::leave(m_hovered);
 	if (m_onRadar && TheControlBar)
@@ -846,6 +869,23 @@ void RmlControlBarScreen::tick()
 	RmlVideoElement::setSource("cameo-movie", TheInGameUI ? TheInGameUI->cameoVideoBuffer() : nullptr);
 
 	screen.refresh(screen.m_data, !screen.m_hasShown);
+    if (screen.m_mobilePreset)
+    {
+        int powers = 0;
+        if (screen.m_model.shortcutsShown)
+            for (const auto &slot : screen.m_model.shortcuts) if (slot.shown) ++powers;
+        const float factor = float(RmlInterfaceSettings::effectiveControlBarScalePercent()) / RmlInterfaceSettings::effectiveScalePercent();
+        auto *tools = screen.m_document->GetElementById("mobile-tools");
+        if (tools) tools->SetProperty("top", std::to_string((48 + ((powers + 2) / 3) * 96) * factor) + "dp");
+        if (TheInGameUI)
+        {
+            const float density = screen.m_context->GetDensityIndependentPixelRatio() * factor;
+            const float radarSize = 240.0f * RmlInterfaceSettings::current().mobileMinimapPercent / 100.0f;
+            TheInGameUI->setMessagePositionOverride(Int((radarSize + 14) * density), Int(66 * density));
+        }
+    }
+    screen.m_document->SetClass("mobile-waypoints", TheInGameUI && TheInGameUI->isInWaypointMode());
+    screen.m_document->SetClass("mobile-attack-move", TheInGameUI && TheInGameUI->isInAttackMoveToMode());
 	screen.show();
 
 	// our beacon selected: its entry takes the keyboard, like the .wnd's (populateBeacon()); gone, it lets go
@@ -866,4 +906,33 @@ void RmlControlBarScreen::tick()
 	screen.trackHover();
 	if (screen.m_hovering)
 		ControlBarActions::hover(screen.m_hovered);
+}
+
+void RmlControlBarScreen::onMobileAction(Rml::DataModelHandle, Rml::Event &event, const Rml::VariantList &arguments)
+{
+    if (!m_mobilePreset || arguments.empty()) return;
+    int action = arguments[0].Get<int>(-1);
+    if (action == 7)
+    {
+        m_model.mobileActionsOpen = !m_model.mobileActionsOpen;
+        m_modelHandle.DirtyVariable("mobile_actions_open");
+        return;
+    }
+    if (action < 0 || action > int(ControlBarActions::MobileAction::Chat)) return;
+    ControlBarActions::mobileAction(static_cast<ControlBarActions::MobileAction>(action));
+    if (action != int(ControlBarActions::MobileAction::Chat) && m_context && m_context->GetFocusElement()) m_context->GetFocusElement()->Blur();
+}
+
+void RmlControlBarScreen::onMobileGroup(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &arguments)
+{
+    if (!m_mobilePreset || arguments.empty()) return;
+    const int group = arguments[0].Get<int>(-1);
+    if (group == -1)
+    {
+        m_model.mobileGroupsOpen = !m_model.mobileGroupsOpen;
+        m_modelHandle.DirtyVariable("mobile_groups_open");
+    }
+    else if (group >= 0 && group <= 9)
+        ControlBarActions::selectMobileGroup(group);
+    if (m_context && m_context->GetFocusElement()) m_context->GetFocusElement()->Blur();
 }

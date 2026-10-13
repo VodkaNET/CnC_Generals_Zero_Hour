@@ -1,0 +1,62 @@
+body.cb.mobile-ui { font-size: 18dp; }
+body.mobile-ui .cb-dock { left: 0; right: 0; top: 0; bottom: 0; width: auto; margin-left: 0; }
+body.mobile-ui .cb-radar { left: 0; top: 0; bottom: auto; width: 240dp; height: 240dp; }
+body.mobile-ui .cb-radar-map { left: 4dp; top: 9dp; width: 227dp; height: 227dp; }
+body.mobile-ui .cb-alarm { left: auto; right: 0; }
+.cb-mobile-resources { display: block; position: absolute; left: 240dp; top: 0; width: 734dp; height: 52dp; overflow: hidden; clip: always; pointer-events: none; }
+body.mobile-ui.usa .cb-mobile-resource-art { decorator: image(cb-usa-production scale-none left top); }
+body.mobile-ui.china .cb-mobile-resource-art { decorator: image(cb-china-production scale-none left top); }
+body.mobile-ui.gla .cb-mobile-resource-art { decorator: image(cb-gla-production scale-none left top); }
+body.mobile-ui.neutral .cb-mobile-resource-art { decorator: image(cb-neutral-production scale-none left top); }
+.cb-mobile-promotions { display: block; position: absolute; right: 0; top: 0; width: 362dp; height: 36dp; pointer-events: none; }
+body.mobile-ui .cb-mobile-promotions .cb-options { left: auto; right: 0; top: 0; width: 72dp; height: 47dp; pointer-events: auto; }
+.cb-mobile-tools { display: block; position: absolute; right: 0; top: 48dp; width: 72dp; height: 216dp; pointer-events: none; }
+body.mobile-ui .cb-mobile-tools .cb-side-btn { top: 0; bottom: auto; width: 72dp; height: 47dp; pointer-events: auto; }
+body.mobile-ui .cb-mobile-tools .cb-options { left: 0; top: 0; }
+body.mobile-ui .cb-mobile-tools .cb-worker { left: 0; top: 0; }
+body.mobile-ui .cb-mobile-tools .cb-beacon-btn { left: 0; top: 54dp; }
+body.mobile-ui .cb-mobile-tools .cb-chat { left: 0; top: 108dp; }
+body.mobile-ui .cb-main { left: auto; right: 295dp; bottom: 0; margin-left: 0; width: 670dp; height: 210dp; }
+body.mobile-ui .cb-unit { right: 0; bottom: 0; width: 295dp; height: 286dp; }
+body.mobile-ui .cb-powers { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: flex-end; align-content: flex-start; right: 0; top: 48dp; bottom: auto; width: 362dp; height: auto; }
+body.mobile-ui .cb-tray { position: relative; float: none; flex: 0 0 119dp; right: auto; bottom: auto; width: 119dp; height: 92dp; margin: 0 1dp 4dp 0; }
+body.mobile-ui .cb-slot.cb-pslot { left: 35dp; top: 25dp; width: 75dp; height: 60dp; }
+.cb-mobile-actions { display: flex; flex-direction: row; align-items: center; position: absolute; left: 16dp; top: 50%; margin-top: -40dp; height: 80dp; pointer-events: none; }
+.cb-mobile-flyout { display: flex; flex-direction: row; align-items: center; margin-left: 8dp; pointer-events: none; }
+.cb-mobile-action-row { display: flex; flex-direction: row; position: absolute; left: 16dp; bottom: 16dp; pointer-events: none; }
+body.mobile-ui button.cb-mobile-round { display: block; position: relative; flex: 0 0 80dp; width: 80dp; height: 80dp; margin: 0 10dp 0 0; padding: 0; min-width: 0; min-height: 0; box-sizing: border-box; border: 1dp #D3D8DC60; border-radius: 40dp; background-color: #979EA578; decorator: none; color: #1D2730; font-size: 48dp; line-height: 76dp; text-align: center; pointer-events: auto; }
+body.mobile-ui button.cb-mobile-round:hover { background-color: #AEB5BBA0; decorator: none; }
+body.mobile-ui button.cb-mobile-round:active, body.mobile-ui button.cb-mobile-round.open { background-color: #B0B7BDA0; decorator: none; }
+body.mobile-ui button.cb-mobile-round:disabled { opacity: 0.4; decorator: none; }
+.cb-mobile-round img, .cb-mobile-round mappedimage { display: block; position: absolute; left: 50%; top: 50%; margin-left: -25dp; margin-top: -25dp; width: 50dp; height: 50dp; pointer-events: none; }
+body.mobile-attack-move button.cb-mobile-attack { background-color: #A4D18AB0; border-color: #D8F3C8; }
+body.mobile-ui .cb-tip { left: 16dp; bottom: 320dp; }
+body.mobile-ui .cb-science { top: 110dp; bottom: auto; }
+
+.cb-mobile-resource-art { display: block; position: absolute; left: 0; top: 0; width: 734dp; height: 52dp; transform: scaleY(-1); transform-origin: 50% 50%; pointer-events: none; }
+body.mobile-ui .cb-mobile-resources .cb-power { top: 4dp; }
+body.mobile-ui .cb-mobile-resources .cb-money { top: 21dp; }
+body.mobile-ui .cb-mobile-action-row { display: block; left: 16dp; bottom: 12dp; width: 360dp; height: 200dp; }
+body.mobile-ui .cb-mobile-action-row .cb-mobile-round { position: absolute; margin: 0; }
+body.mobile-ui .cb-mobile-action-row .cb-mobile-scatter { left: 0; top: 4dp; }
+body.mobile-ui .cb-mobile-action-row .cb-mobile-attack { left: 144dp; top: 106dp; }
+body.mobile-ui .cb-mobile-action-row .cb-mobile-stop { left: 12dp; top: 92dp; width: 108dp; height: 108dp; border-radius: 54dp; }
+body.mobile-ui .cb-mobile-action-row .cb-mobile-cancel { left: 248dp; top: 92dp; width: 108dp; height: 108dp; border-radius: 54dp; }
+body.mobile-ui .cb-mobile-cancel img { width: 68dp; height: 68dp; margin-left: -34dp; margin-top: -34dp; }
+.cb-mobile-round roundimage { display: block; position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0.78; pointer-events: none; }
+@media (max-width: 1280dp) {
+    body.mobile-ui .cb-mobile-action-row { bottom: 240dp; }
+}
+
+body.mobile-ui .cb-grid { left: 12dp; }
+body.mobile-ui .cb-task { left: 10dp; }
+body.mobile-ui .cb-unit .cb-general { left: 204dp; top: 46dp; width: 91dp; height: 31dp; }
+body.mobile-ui button.cb-mobile-chat-button { position: absolute; left: 0; top: 162dp; width: 72dp; height: 72dp; border-radius: 36dp; margin: 0; }
+.cb-mobile-chat-icon { display: block; position: absolute; left: 18dp; top: 20dp; width: 32dp; height: 24dp; border: 3dp #1D2730; border-radius: 6dp; pointer-events: none; }
+.cb-mobile-chat-tail { display: block; position: absolute; left: 3dp; bottom: -8dp; width: 8dp; height: 8dp; background-color: #1D2730; transform: rotate(45deg); }
+.cb-mobile-route-icon { display: block; width: 100%; height: 100%; line-height: 76dp; font-size: 46dp; text-align: center; pointer-events: none; }
+body.mobile-ui.mobile-waypoints button.cb-mobile-round.cb-mobile-route { background-color: #6DAD58B0; border-color: #C0E9AB; }
+
+.cb-mobile-groups { display: flex; flex-direction: row; align-items: center; position: absolute; left: 16dp; top: 50%; margin-top: 56dp; height: 80dp; pointer-events: none; }
+.cb-mobile-group-flyout { display: flex; flex-direction: row; align-items: center; margin-left: 8dp; pointer-events: none; }
+body.mobile-ui button.cb-mobile-group-number { font-size: 32dp; }

@@ -396,6 +396,12 @@ public:  // ********************************************************************
 	virtual void message(AsciiString stringManagerLabel, ...);///< display a message to the user
 	virtual void toggleMessages() { m_messagesOn = 1 - m_messagesOn; }	///< toggle messages on/off
 	virtual Bool isMessagesOn() { return m_messagesOn; }	///< are the display messages on
+    void setMessagePositionOverride(Int x, Int y)
+    {
+        m_messagePositionOverridden = x >= 0 && y >= 0;
+        m_messagePositionOverride.x = x;
+        m_messagePositionOverride.y = y;
+    }
 	void freeMessageResources();				///< free resources for the ui messages
 	void freeCustomUiResources();				///< free resources for custom ui elements
 	Color getMessageColor(Bool altColor) { return (altColor) ? m_messageColor2 : m_messageColor1; }
@@ -1008,6 +1014,8 @@ protected:
 	Color												m_messageColor1;
 	Color												m_messageColor2;
 	ICoord2D										m_messagePosition;
+    Bool m_messagePositionOverridden = FALSE;
+    ICoord2D m_messagePositionOverride = {0, 0};
 	AsciiString									m_messageFont;
 	Int													m_messagePointSize;
 	Bool												m_messageBold;

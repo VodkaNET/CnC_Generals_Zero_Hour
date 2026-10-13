@@ -58,6 +58,9 @@ const Values &current()
         pref.load(preferenceFile);
         values.scalePercent = std::clamp(pref.getInt("Scale", 100), 50, 100);
         values.controlBarScalePercent = std::clamp(pref.getInt("ControlBarScale", 100), 50, 100);
+        values.mobileMode = pref.getBool("MobileMode", FALSE);
+        values.mobileUi = pref.getBool("MobileUI", FALSE);
+        values.mobileMinimapPercent = std::clamp(pref.getInt("MobileMinimapScale", 100), 50, 150);
         values.darkTheme = pref.getBool("DarkTheme", FALSE);
         values.customTheme = pref.getAsciiString("CustomTheme", "").str();
         values.enableBackground = pref.getBool("EnableBackground", FALSE);
@@ -73,6 +76,9 @@ const Values &current()
     }
     return values;
 }
+
+int effectiveScalePercent() { return current().scalePercent + (current().mobileMode ? 30 : 0); }
+int effectiveControlBarScalePercent() { return current().controlBarScalePercent + (current().mobileMode ? 30 : 0); }
 
 std::string stylePath(const std::string &path)
 {
@@ -90,7 +96,7 @@ std::string scaleControlBarStyle(const std::string &source)
 {
     const auto &settings = current();
     if (settings.controlBarScalePercent == settings.scalePercent) return source;
-    const double scale = double(settings.controlBarScalePercent) / settings.scalePercent;
+    const double scale = double(effectiveControlBarScalePercent()) / effectiveScalePercent();
     static const std::regex tokens(R"rcss(/\*[\s\S]*?\*/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|(\bresolution\s*:\s*)([0-9]+(?:\.[0-9]+)?)(x\b)|(-?(?:[0-9]+(?:\.[0-9]+)?|\.[0-9]+))(dp\b))rcss");
     std::string result;
     size_t offset = 0;
@@ -115,6 +121,7 @@ bool save(const Values &input, std::string &error)
     Values next = input;
     next.scalePercent = std::clamp(next.scalePercent, 50, 100);
     next.controlBarScalePercent = std::clamp(next.controlBarScalePercent, 50, 100);
+    next.mobileMinimapPercent = std::clamp(next.mobileMinimapPercent, 50, 150);
     next.productionProgressStyle = next.productionProgressStyle == 1 ? 1 : 0;
     if (!next.customTheme.empty() && (RmlInterfacePlatform::extension(next.customTheme) != ".rcss" || !parseSheet(next.customTheme)))
     {
@@ -135,6 +142,9 @@ bool save(const Values &input, std::string &error)
     pref.load(preferenceFile);
     pref.setInt("Scale", next.scalePercent);
     pref.setInt("ControlBarScale", next.controlBarScalePercent);
+    pref.setBool("MobileMode", next.mobileMode);
+    pref.setBool("MobileUI", next.mobileUi);
+    pref.setInt("MobileMinimapScale", next.mobileMinimapPercent);
     pref.setBool("DarkTheme", next.darkTheme);
     pref.setAsciiString("CustomTheme", next.customTheme.c_str());
     pref.setBool("EnableBackground", next.enableBackground);
@@ -168,7 +178,7 @@ void apply(Rml::Context *context, int width, int height)
 {
     if (!context) return;
     const Values &settings = current();
-    const float density = height / 1080.0f * settings.scalePercent / 100.0f;
+    const float density = height / 1080.0f * effectiveScalePercent() / 100.0f;
     if (std::abs(context->GetDensityIndependentPixelRatio() - density) > 0.0001f)
         context->SetDensityIndependentPixelRatio(density);
 
@@ -275,6 +285,24 @@ void apply(Rml::Context *context, int width, int height)
         }
         if (doc->IsClassSet("cb"))
         {
+            doc->SetClass("mobile-ui", settings.mobileUi);
+            if (settings.mobileUi && appearanceChanged)
+            {
+                const float factor = float(effectiveControlBarScalePercent()) / effectiveScalePercent();
+                const float radarSize = 240.0f * settings.mobileMinimapPercent / 100.0f;
+                auto setDp = [factor](Rml::Element *element, const char *property, float value) {
+                    if (element) element->SetProperty(property, std::to_string(value * factor) + "dp");
+                };
+                auto *radar = doc->GetElementById("mobile-radar");
+                auto *map = doc->GetElementById("mobile-radar-map");
+                setDp(radar, "width", radarSize);
+                setDp(radar, "height", radarSize);
+                setDp(map, "left", radarSize * 5 / 340);
+                setDp(map, "top", radarSize * 13 / 340);
+                setDp(map, "width", radarSize * 322 / 340);
+                setDp(map, "height", radarSize * 322 / 340);
+                setDp(doc->GetElementById("mobile-resources"), "left", radarSize);
+            }
             doc->SetClass("show-energy-numbers", settings.showEnergyNumbers);
             doc->SetClass("show-unit-name", settings.showUnitName);
             doc->SetClass("show-general-rank", settings.showGeneralRank);

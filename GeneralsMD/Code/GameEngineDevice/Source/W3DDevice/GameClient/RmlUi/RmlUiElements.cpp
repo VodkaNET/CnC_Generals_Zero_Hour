@@ -624,6 +624,27 @@ void RmlFadedPortraitElement::OnRender()
             right = left + width;
         }
         Rml::Mesh mesh;
+        if (GetTagName() == "roundimage")
+        {
+            const auto colour = Rml::Colourb(255, 255, 255, 255).ToPremultiplied(opacity);
+            Rml::Vertex centre;
+            centre.position = {size.x * 0.5f, size.y * 0.5f};
+            centre.tex_coord = {(left + right) * 0.5f, (top + bottom) * 0.5f};
+            centre.colour = colour;
+            mesh.vertices.push_back(centre);
+            for (int i = 0; i <= 96; ++i)
+            {
+                const float angle = float(i) * 6.28318530718f / 96;
+                const float u = 0.5f + 0.5f * std::cos(angle), v = 0.5f + 0.5f * std::sin(angle);
+                Rml::Vertex vertex;
+                vertex.position = {u * size.x, v * size.y};
+                vertex.tex_coord = {left + (right - left) * u, top + (bottom - top) * v};
+                vertex.colour = colour;
+                mesh.vertices.push_back(vertex);
+                if (i > 0) mesh.indices.insert(mesh.indices.end(), {0, i, i + 1});
+            }
+        }
+        else
         for (int x = 0; x <= 24; ++x)
         {
             const float u = float(x) / 24;

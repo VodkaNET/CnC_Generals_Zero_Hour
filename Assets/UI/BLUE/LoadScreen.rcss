@@ -621,3 +621,32 @@ body.ld
     .ld-concept .ld-cards { margin-right: 360dp; }
     .ld-model-backdrop { margin-left: -14vw; width: 62vw; }
 }
+
+.ld-concept .ld-general-dock
+{
+    position: absolute;
+    right: 72dp;
+    top: 82dp;
+    margin-left: 0;
+    width: 600dp;
+    box-sizing: border-box;
+    z-index: 2;
+}
+.ld-card { position: relative; }
+.ld-player-portrait
+{
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 60%;
+    height: 100%;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+}
+.ld-card-top, .ld-name, .ld-army-line, .ld-stats, .ld-player-bar { position: relative; z-index: 1; }
+@media (max-aspect-ratio: 3/2)
+{
+    .ld-concept .ld-general-dock { right: 40dp; width: 460dp; }
+}

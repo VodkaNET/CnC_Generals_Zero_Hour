@@ -114,6 +114,7 @@ void RmlLoadScreen::load(Rml::Context *context)
 			rowHandle.RegisterMember("rank_image", &RowModel::rankImage);
 			rowHandle.RegisterMember("medal_image", &RowModel::medalImage);
 			rowHandle.RegisterMember("side_image", &RowModel::sideImage);
+            rowHandle.RegisterMember("portrait_image", &RowModel::portraitImage);
 			rowHandle.RegisterMember("has_side_image", &RowModel::hasSideImage);
 			rowHandle.RegisterMember("color_hex", &RowModel::colorHex);
 			rowHandle.RegisterMember("progress_style", &RowModel::progressStyle);
@@ -224,6 +225,7 @@ void RmlLoadScreen::refresh()
 		row.hasRank = !src.m_rankImage.isEmpty();
 		row.hasMedal = !src.m_medalImage.isEmpty();
 		row.sideImage = src.m_sideImage.str();
+        row.portraitImage = src.m_portraitImage.str();
 		row.hasSideImage = !src.m_sideImage.isEmpty();
 		row.colorHex = rgbToHex(src.m_color);
 		row.progressStyle = percentStyle((float)src.m_progress);

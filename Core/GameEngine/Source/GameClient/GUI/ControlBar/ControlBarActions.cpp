@@ -27,6 +27,8 @@
 #include "Common/GameUtility.h"
 #include "Common/GlobalData.h"
 #include "Common/Radar.h"
+#include "Common/MessageStream.h"
+#include "GameLogic/GameLogic.h"
 #include "GameClient/ControlBar.h"
 #include "GameClient/ControlBarData.h"
 #include "Common/NameKeyGenerator.h"
@@ -198,4 +200,42 @@ void ControlBarActions::radarDrag( Bool right )
 	Coord3D world;
 	if( TheRadar->localPixelToRadar( &mouse, &radar ) && TheRadar->radarToWorld( &radar, &world ) )
 		TheTacticalView->userLookAt( &world );
+}
+
+void ControlBarActions::mobileAction(MobileAction action)
+{
+    if (!TheInGameUI || !TheMessageStream || !TheGameLogic || !TheGameLogic->isInGame() ||
+        TheGameLogic->isInShellGame() || TheGameLogic->isInReplayGame()) return;
+    if (action == MobileAction::Cancel)
+    {
+        const Bool pending = TheInGameUI->getGUICommand() || TheInGameUI->getPendingPlaceType() || TheInGameUI->isInAttackMoveToMode() || TheInGameUI->isInWaypointMode();
+        TheInGameUI->setGUICommand(nullptr);
+        TheInGameUI->placeBuildAvailable(nullptr, nullptr);
+        TheInGameUI->clearAttackMoveToMode();
+        if (TheInGameUI->isInWaypointMode()) TheMessageStream->appendMessage(GameMessage::MSG_META_END_WAYPOINTS);
+        TheInGameUI->setScrolling(FALSE);
+        if (!pending) TheInGameUI->deselectAllDrawables();
+        return;
+    }
+    GameMessage::Type message;
+    switch (action)
+    {
+        case MobileAction::SelectAll: message = GameMessage::MSG_META_SELECT_ALL; break;
+        case MobileAction::SelectMatching: message = GameMessage::MSG_META_SELECT_MATCHING_UNITS; break;
+        case MobileAction::Formation: message = GameMessage::MSG_META_CREATE_FORMATION; break;
+        case MobileAction::Scatter: message = GameMessage::MSG_META_SCATTER; break;
+        case MobileAction::Stop: message = GameMessage::MSG_META_STOP; break;
+        case MobileAction::AttackMove: message = GameMessage::MSG_META_TOGGLE_ATTACKMOVE; break;
+        case MobileAction::Waypoints: message = TheInGameUI->isInWaypointMode() ? GameMessage::MSG_META_END_WAYPOINTS : GameMessage::MSG_META_BEGIN_WAYPOINTS; break;
+        case MobileAction::Chat: message = GameMessage::MSG_META_CHAT_EVERYONE; break;
+        default: return;
+    }
+    TheMessageStream->appendMessage(message);
+}
+
+void ControlBarActions::selectMobileGroup(Int group)
+{
+    if (group < 0 || group > 9 || !TheMessageStream || !TheGameLogic ||
+        !TheGameLogic->isInGame() || TheGameLogic->isInShellGame() || TheGameLogic->isInReplayGame()) return;
+    TheMessageStream->appendMessage(static_cast<GameMessage::Type>(GameMessage::MSG_META_SELECT_TEAM0 + group));
 }

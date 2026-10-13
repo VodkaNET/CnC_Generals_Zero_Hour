@@ -18,13 +18,6 @@
 					<div class="ld-loading pulse"><gametext key="GUI:Loading"/></div>
 				</div>
 				<div class="spacer"></div>
-				<div class="ld-general" data-if="local_name != ''">
-					<div class="ld-portrait" data-if="has_portrait"><mappedimage data-attr-name="local_portrait"/></div>
-					<div class="ld-general-text">
-						<div class="ld-general-name">{{local_name}}</div>
-						<div class="ld-general-features"><div class="ld-feature-line" data-for="feature : local_feature_lines"><span class="ld-feature-bullet">&#8226;</span><span>{{feature}}</span></div></div>
-					</div>
-				</div>
 			</div>
 
 			<div class="ld-mid">
@@ -47,6 +40,7 @@
 
 			<div class="ld-cards">
 				<div class="ld-card" data-for="row : rows" data-if="row.used" data-style-border-top-color="row.color_hex">
+					<fadedportrait class="ld-player-portrait" data-if="row.portrait_image != ''" data-attr-name="row.portrait_image"></fadedportrait>
 					<div class="ld-card-top">
 						<div class="pc-badge ld-badge"><mappedimage data-if="row.has_side_image" data-attr-name="row.side_image"/><span data-if="!row.has_side_image">?</span></div>
 						<div class="ld-rank" data-if="row.has_rank"><mappedimage data-attr-name="row.rank_image"/></div>
@@ -61,6 +55,13 @@
 					<div class="progress ld-player-bar" data-class-invisible="!row.show_progress"><div class="progress-fill" data-style-width="row.progress_style" data-style-background-color="row.color_hex"></div></div>
 				</div>
 			</div>
+		</div>
+		<div class="ld-general ld-general-dock" data-if="local_name != ''">
+					<div class="ld-portrait" data-if="has_portrait"><mappedimage data-attr-name="local_portrait"/></div>
+					<div class="ld-general-text">
+						<div class="ld-general-name">{{local_name}}</div>
+						<div class="ld-general-features"><div class="ld-feature-line" data-for="feature : local_feature_lines"><span class="ld-feature-bullet">&#8226;</span><span>{{feature}}</span></div></div>
+					</div>
 		</div>
 		<div class="surface ld-map-card ld-map-dock" data-if="has_map">
 			<div class="map-frame ld-map-frame">

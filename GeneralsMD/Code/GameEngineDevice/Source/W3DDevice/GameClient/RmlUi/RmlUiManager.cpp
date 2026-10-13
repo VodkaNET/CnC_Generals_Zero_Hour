@@ -307,7 +307,7 @@ void RmlUiManager::init(int width, int height)
 	// dp units scale off a 1080p baseline so common.rcss's spacing/sizes stay consistent
 	// across resolutions and aspect ratios (see report for the palette this backs).
 	if (m_context)
-		m_context->SetDensityIndependentPixelRatio(height / 1080.0f * RmlInterfaceSettings::current().scalePercent / 100.0f);
+		m_context->SetDensityIndependentPixelRatio(height / 1080.0f * RmlInterfaceSettings::effectiveScalePercent() / 100.0f);
 
 	registerCustomElements();
 
@@ -477,6 +477,7 @@ void RmlUiManager::registerCustomElements()
 	Rml::Factory::RegisterElementInstancer("loadbackdrop", m_loadBackdropInstancer);
     m_fadedPortraitInstancer = new Rml::ElementInstancerGeneric<RmlFadedPortraitElement>();
     Rml::Factory::RegisterElementInstancer("fadedportrait", m_fadedPortraitInstancer);
+    Rml::Factory::RegisterElementInstancer("roundimage", m_fadedPortraitInstancer);
 	m_modelPreviewInstancer = new Rml::ElementInstancerGeneric<RmlModelPreviewElement>();
 	Rml::Factory::RegisterElementInstancer("modelpreview", m_modelPreviewInstancer);
 }
@@ -538,7 +539,7 @@ void RmlUiManager::onResize(int width, int height)
 	if (m_context)
 	{
 		m_context->SetDimensions(Rml::Vector2i(width, height));
-		m_context->SetDensityIndependentPixelRatio(height / 1080.0f * RmlInterfaceSettings::current().scalePercent / 100.0f);
+		m_context->SetDensityIndependentPixelRatio(height / 1080.0f * RmlInterfaceSettings::effectiveScalePercent() / 100.0f);
 	}
 }
 

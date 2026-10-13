@@ -69,6 +69,7 @@ private:
 		Rml::String rankImage;
 		Rml::String medalImage;
 		Rml::String sideImage;
+        Rml::String portraitImage;
 		bool hasSideImage = false;
 		Rml::String colorHex = "#FFFFFF";
 		Rml::String progressStyle = "0%"; ///< "42%", bound via data-style-width

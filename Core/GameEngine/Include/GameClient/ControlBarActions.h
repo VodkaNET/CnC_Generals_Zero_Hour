@@ -33,6 +33,9 @@ struct ControlBarButtonId;
 
 namespace ControlBarActions
 {
+    enum class MobileAction { SelectAll, SelectMatching, Formation, Scatter, Stop, AttackMove, Cancel, Waypoints = 8, Chat = 9 };
+    void mobileAction(MobileAction action);
+    void selectMobileGroup(Int group);
 	// The pointer entering and leaving a button: its hilite and GBM_MOUSE_ENTERING/LEAVING.
 	void enter( const ControlBarButtonId &id );
 	void leave( const ControlBarButtonId &id );

@@ -256,6 +256,27 @@ static const Int TELETYPE_UPDATE_FREQ = 2; // how many frames between teletype u
 // LoadScreen Class
 //-----------------------------------------------------------------------------
 
+static AsciiString getSlotPortraitImage(GameSlot *slot)
+{
+#if RTS_GENERALS
+    return getSlotSideImage(slot);
+#else
+#if defined(GO_REVEAL_TEAMS)
+    const Int index = slot->getPlayerTemplate();
+#else
+    const Int index = slot->getApparentPlayerTemplate();
+#endif
+    if (!ThePlayerTemplateStore || index < 0 || index >= ThePlayerTemplateStore->getPlayerTemplateCount()) return AsciiString::TheEmptyString;
+    const auto *player = ThePlayerTemplateStore->getNthPlayerTemplate(index);
+    if (!player) return AsciiString::TheEmptyString;
+    if (player->getName() != "FactionAmerica" && player->getName() != "FactionGLA" && player->getName() != "FactionChina" &&
+        (!TheChallengeGenerals || !TheChallengeGenerals->getGeneralByTemplateName(player->getName())))
+        return AsciiString::TheEmptyString;
+    UnicodeString name;
+    const Image *image = getLocalGeneralPortrait(player, TRUE, name);
+    return image ? image->getName() : AsciiString::TheEmptyString;
+#endif
+}
 LoadScreen::LoadScreen()
 {
 	m_loadScreen = nullptr;
@@ -1214,6 +1235,7 @@ void MultiPlayerLoadScreen::init( GameInfo *game )
 		row.m_color = TheMultiplayerSettings->getColor(slot->getApparentColor())->getColor() & 0xFFFFFF;
 		row.m_side = getSlotSideName( slot );
 		row.m_sideImage = getSlotSideImage( slot );
+        row.m_portraitImage = getSlotPortraitImage(slot);
 		row.m_showProgress = !slot->isAI();
 		AsciiString teamStr;
 		teamStr.format("Team:%d", slot->getTeamNumber() + 1);
@@ -1423,6 +1445,7 @@ GameSlot *lSlot = game->getSlot(game->getLocalSlotNum());
 		row.m_color = TheMultiplayerSettings->getColor(slot->getApparentColor())->getColor() & 0xFFFFFF;
 		row.m_side = getSlotSideName( slot );
 		row.m_sideImage = getSlotSideImage( slot );
+        row.m_portraitImage = getSlotPortraitImage(slot);
 		row.m_winLoss = info.m_winLoss;
 		row.m_disconnects = info.m_disconnects;
 		row.m_rankImage = info.m_rankImage ? info.m_rankImage->getName() : AsciiString::TheEmptyString;

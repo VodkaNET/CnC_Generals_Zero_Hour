@@ -88,6 +88,19 @@
 						<div class="opt-text"><div class="opt-label">Production Progress</div><div class="opt-desc">Choose the progress overlay for production and cooldown icons.</div></div>
 						<div class="opt-control"><select data-value="production_progress_style"><option value="0">Shutter (Default)</option><option value="1">Classic Radial</option></select></div>
 					</div>
+                    <div class="opt-head interface-category">Mobile UI</div>
+                    <label class="opt-row">
+                        <div class="opt-text"><div class="opt-label">Mobile Mode</div><div class="opt-desc">Add 30 percentage points to Interface Scale and ControlBar Scale. 100% becomes 130%.</div></div>
+                        <div class="opt-control"><input class="checkbox" type="checkbox" data-checked="mobile_mode"/></div>
+                    </label>
+                    <label class="opt-row">
+                        <div class="opt-text"><div class="opt-label">Mobile UI</div><div class="opt-desc">Use the mobile ControlBar layout with large action buttons.</div></div>
+                        <div class="opt-control"><input class="checkbox" type="checkbox" data-checked="mobile_ui"/></div>
+                    </label>
+                    <div class="opt-row" data-if="mobile_ui">
+                        <div class="opt-text"><div class="opt-label">Minimap Size</div><div class="opt-desc">Adjust the mobile minimap independently.</div></div>
+                        <div class="opt-control opt-slider"><input class="range" type="range" min="50" max="150" step="5" data-value="mobile_minimap_scale"/><div class="opt-value">{{mobile_minimap_scale}}%</div></div>
+                    </div>
 					<div class="interface-error" data-if="interface_error != ''">{{interface_error}}</div>
 				</div>
 				<!-- Display: resolution, brightness, anti-aliasing, texture filtering, anisotropy -->

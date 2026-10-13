@@ -85,6 +85,9 @@ void RmlOptionsScreen::load(Rml::Context *context)
 		m_hq.bind(constructor);
 		constructor.Bind("tab", &m_model.tab);
 		constructor.Bind("ui_scale", &m_model.uiScale);
+		constructor.Bind("mobile_mode", &m_model.mobileMode);
+		constructor.Bind("mobile_ui", &m_model.mobileUi);
+		constructor.Bind("mobile_minimap_scale", &m_model.mobileMinimapScale);
 		constructor.Bind("controlbar_scale", &m_model.controlBarScale);
 		constructor.Bind("ui_theme", &m_model.uiTheme);
 		constructor.Bind("custom_theme_index", &m_model.customThemeIndex);
@@ -226,6 +229,9 @@ void RmlOptionsScreen::updateDetailControlsDisabled()
 void RmlOptionsScreen::loadCurrentValues()
 {
 	const auto &interfaceValues = RmlInterfaceSettings::current();
+	m_model.mobileMode = interfaceValues.mobileMode;
+	m_model.mobileUi = interfaceValues.mobileUi;
+	m_model.mobileMinimapScale = interfaceValues.mobileMinimapPercent;
 	m_model.uiScale = interfaceValues.scalePercent;
 	m_model.controlBarScale = interfaceValues.controlBarScalePercent;
 	m_model.uiTheme = interfaceValues.darkTheme ? 1 : 0;
@@ -287,6 +293,9 @@ void RmlOptionsScreen::loadCurrentValues()
 void RmlOptionsScreen::loadDefaultValues()
 {
 	m_model.uiScale = 100;
+	m_model.mobileMode = false;
+	m_model.mobileUi = false;
+	m_model.mobileMinimapScale = 100;
 	m_model.controlBarScale = 100;
 	m_model.uiTheme = 0;
 	m_model.customThemeIndex = 0;
@@ -462,6 +471,9 @@ void RmlOptionsScreen::onSelectTab(const Rml::String &tab)
 bool RmlOptionsScreen::saveInterfaceValues()
 {
     RmlInterfaceSettings::Values next;
+    next.mobileMode = m_model.mobileMode;
+    next.mobileUi = m_model.mobileUi;
+    next.mobileMinimapPercent = m_model.mobileMinimapScale;
     next.scalePercent = m_model.uiScale;
     next.controlBarScalePercent = m_model.controlBarScale;
     next.darkTheme = m_model.uiTheme == 1;

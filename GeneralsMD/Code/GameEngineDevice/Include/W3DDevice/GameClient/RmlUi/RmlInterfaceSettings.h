@@ -11,6 +11,9 @@ struct Values
 {
     int scalePercent = 100;
     int controlBarScalePercent = 100;
+    bool mobileMode = false;
+    bool mobileUi = false;
+    int mobileMinimapPercent = 100;
     bool darkTheme = false;
     std::string customTheme;
     bool enableBackground = false;
@@ -25,6 +28,8 @@ struct Values
 };
 
 const Values &current();
+int effectiveScalePercent();
+int effectiveControlBarScalePercent();
 std::string stylePath(const std::string &path);
 std::string scaleControlBarStyle(const std::string &source);
 bool save(const Values &values, std::string &error);

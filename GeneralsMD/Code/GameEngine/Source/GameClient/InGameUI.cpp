@@ -3914,8 +3914,8 @@ void InGameUI::postDraw()
 		Color dropColor;
 		UnsignedByte r, g, b, a;
 
-		x = m_messagePosition.x;
-		y = m_messagePosition.y;
+		x = m_messagePositionOverridden ? m_messagePositionOverride.x : m_messagePosition.x;
+		y = m_messagePositionOverridden ? m_messagePositionOverride.y : m_messagePosition.y;
 		for (i = MAX_UI_MESSAGES - 1; i >= 0; i--)
 		{
 
