@@ -22,7 +22,7 @@ namespace
 {
 struct Entry
 {
-    std::string faction, title, advice, author, command, object, upgrade, relatedObject;
+    std::string faction, title, advice, author, command, object, upgrade, relatedObject, descriptionLabel;
 };
 std::vector<Entry> entries;
 std::map<std::string, std::size_t> cursors;
@@ -74,6 +74,7 @@ void load()
         else if (key == "Object") entry->object = value;
         else if (key == "Upgrade") entry->upgrade = value;
         else if (key == "RelatedObject") entry->relatedObject = value;
+        else if (key == "DescriptionLabel") entry->descriptionLabel = value;
     }
     entries.erase(std::remove_if(entries.begin(), entries.end(), [](const Entry &entry) {
         return entry.title.empty() || entry.advice.empty();
@@ -116,7 +117,7 @@ std::size_t select(const std::string &side)
     const auto faction = factionFor(side);
     std::vector<std::size_t> candidates;
     for (std::size_t i = 0; i < entries.size(); ++i)
-        if (faction.empty() || entries[i].faction == faction) candidates.push_back(i);
+        if (faction.empty() || entries[i].faction == faction || entries[i].faction == "ALL") candidates.push_back(i);
     if (candidates.empty())
         for (std::size_t i = 0; i < entries.size(); ++i) candidates.push_back(i);
     return candidates[cursors[faction]++ % candidates.size()];
@@ -128,7 +129,7 @@ Tip resolve(std::size_t index, const std::string &side)
     if (index >= entries.size()) return {};
     const auto &entry = entries[index];
     Tip tip;
-    tip.faction = entry.faction + " FACTION";
+    tip.faction = entry.faction == "ALL" ? "ALL FACTIONS" : entry.faction + " FACTION";
     tip.title = entry.title;
     tip.advice = entry.advice;
     tip.author = entry.author;
@@ -156,10 +157,18 @@ Tip resolve(std::size_t index, const std::string &side)
         upgrade = TheUpgradeCenter->findUpgrade(entry.upgrade.c_str());
     if (object)
     {
-        cost = player ? object->calcCostToBuild(player) : object->friend_getBuildCost();
-        if (!command) tip.title = unicodeToUtf8(object->getDisplayName());
+        if (!object->isKindOf(KINDOF_TECH_BUILDING))
+            cost = player ? object->calcCostToBuild(player) : object->friend_getBuildCost();
+        if (tip.image.empty())
+        {
+            const Image *image = object->getSelectedPortraitImage();
+            if (!image) image = object->getButtonImage();
+            if (image) tip.image = image->getName().str();
+        }
     }
     else if (upgrade) cost = upgrade->calcCostToBuild(player);
+    if (tip.description.empty() && !entry.descriptionLabel.empty())
+        tip.description = gameText(entry.descriptionLabel.c_str());
     if (cost >= 0) tip.cost = "$" + std::to_string(cost);
     if (!entry.relatedObject.empty()) tip.modelObject = entry.relatedObject;
     else if (object) tip.modelObject = object->getName().str();

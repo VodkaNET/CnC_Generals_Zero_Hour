@@ -79,7 +79,8 @@ struct RmlModelPreviewElement::State
             const auto *module = modules.getNthData(i);
             const auto *draw = module ? module->getAsW3DModelDrawModuleData() : nullptr;
             if (!draw || !draw->m_attachToDrawableBone.isEmpty()) continue;
-            if (draw->m_defaultState >= 0 && draw->m_defaultState < Int(draw->m_conditionStates.size()))
+            condition = draw->findBestInfo(ModelConditionFlags());
+            if (!condition && draw->m_defaultState >= 0 && draw->m_defaultState < Int(draw->m_conditionStates.size()))
                 condition = &draw->m_conditionStates[draw->m_defaultState];
             if (!condition && !draw->m_conditionStates.empty()) condition = &draw->m_conditionStates.front();
             if (condition && (condition->m_modelName.isEmpty() || condition->m_modelName == "NONE" || condition->m_modelName == "None")) condition = nullptr;
