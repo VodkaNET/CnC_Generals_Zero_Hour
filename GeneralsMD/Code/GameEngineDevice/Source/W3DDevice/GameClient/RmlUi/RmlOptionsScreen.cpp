@@ -23,6 +23,7 @@
 #include "GameClient/GUICallbacks.h"
 #include "GameClient/ShellHooks.h"
 #include "GameClient/Shell.h"
+#include "GameClient/Display.h"
 #include "W3DDevice/GameClient/RmlUi/RmlUiManager.h"
 #include "W3DDevice/GameClient/RmlUi/RmlInterfaceSettings.h"
 
@@ -390,25 +391,24 @@ bool RmlOptionsScreen::applyAndSave()
 //-------------------------------------------------------------------------------------------------
 void RmlOptionsScreen::populateSelectOptions()
 {
-	auto fillSelect = [this](const char *id, int count, int selected, const std::function<Rml::String(int)> &label)
-	{
-		Rml::Element *element = m_document->GetElementById(id);
-		if (!element)
-			return;
-		Rml::String html;
-		for (int i = 0; i < count; ++i)
-		{
-			// An empty label leaves the choice out.
-			const Rml::String text = label(i);
-			if (!text.empty())
-				html += "<option value=\"" + std::to_string(i) + "\">" + text + "</option>";
-		}
-		element->SetInnerRML(html);
-		if ((std::string(id) == "select_custom_theme" || std::string(id) == "select_background") && element->GetTagName() == "select")
-			static_cast<Rml::ElementFormControlSelect *>(element)->SetValue(std::to_string(selected));
-	};
+	const auto values = m_model;
+    auto fillSelect = [this](const char *id, int count, int selected, const std::function<Rml::String(int)> &label)
+    {
+        auto *element = m_document->GetElementById(id);
+        if (!element || element->GetTagName() != "select") return;
+        auto *select = static_cast<Rml::ElementFormControlSelect *>(element);
+        select->RemoveAll();
+        if (std::string(id) == "select_resolution" && selected < 0)
+            select->Add(std::to_string(TheDisplay->getWidth()) + " x " + std::to_string(TheDisplay->getHeight()) + " (Current)", "-1");
+        for (int i = 0; i < count; ++i)
+        {
+            const auto text = label(i);
+            if (!text.empty()) select->Add(text, std::to_string(i));
+        }
+        select->SetValue(std::to_string(selected));
+    };
 
-	fillSelect("select_resolution", OptionsValues::GetDisplayModeCount(), m_model.resolutionIndex,
+    fillSelect("select_resolution", OptionsValues::GetDisplayModeCount(), values.resolutionIndex,
 		[](int i)
 		{
 			OptionsValues::DisplayModeValues mode = OptionsValues::GetDisplayMode(i);
@@ -416,7 +416,7 @@ void RmlOptionsScreen::populateSelectOptions()
 		});
 
 	const int customLevel = OptionsValues::GetDetailCustomLevel();
-	fillSelect("select_detail", customLevel + 1, m_model.detailLevel,
+	fillSelect("select_detail", customLevel + 1, values.detailLevel,
 		[customLevel](int i)
 		{
 			// The .wnd's comboBoxDetail labels (OptionsMenu.cpp), which the LOD names only stand in for.
@@ -430,7 +430,7 @@ void RmlOptionsScreen::populateSelectOptions()
 
 	// Each language by its own name (Arabic in its own direction), the installed one marked; choice 0, for an
 	// installed language without an entry, is only listed then.
-	fillSelect("select_language", OptionsValues::GetTextLanguageChoiceCount(), m_model.textLanguage,
+	fillSelect("select_language", OptionsValues::GetTextLanguageChoiceCount(), values.textLanguage,
 		[](int i)
 		{
 			if (i == 0)
@@ -438,15 +438,17 @@ void RmlOptionsScreen::populateSelectOptions()
 			return unicodeToUtf8(OptionsValues::GetTextLanguageChoiceName(i));
 		});
 
-	fillSelect("select_lan_ip", OptionsValues::GetIPChoiceCount(), m_model.lanIPIndex,
+	fillSelect("select_lan_ip", OptionsValues::GetIPChoiceCount(), values.lanIPIndex,
 		[](int i) { return Rml::String(OptionsValues::GetIPChoiceLabel(i).str()); });
 
-	fillSelect("select_online_ip", OptionsValues::GetIPChoiceCount(), m_model.onlineIPIndex,
+	fillSelect("select_online_ip", OptionsValues::GetIPChoiceCount(), values.onlineIPIndex,
 		[](int i) { return Rml::String(OptionsValues::GetIPChoiceLabel(i).str()); });
-	fillSelect("select_custom_theme", int(m_customThemes.size()) + 1, m_model.customThemeIndex,
+	fillSelect("select_custom_theme", int(m_customThemes.size()) + 1, values.customThemeIndex,
 		[this](int i) { return i == 0 ? Rml::String("None") : interfacePathLabel(m_customThemes[i - 1]); });
-	fillSelect("select_background", int(m_backgroundImages.size()) + 1, m_model.backgroundIndex,
+	fillSelect("select_background", int(m_backgroundImages.size()) + 1, values.backgroundIndex,
 		[this](int i) { return i == 0 ? Rml::String("Select an image...") : interfacePathLabel(m_backgroundImages[i - 1]); });
+    m_model = values;
+    if (m_modelHandle) m_modelHandle.DirtyAllVariables();
 }
 
 //-------------------------------------------------------------------------------------------------
