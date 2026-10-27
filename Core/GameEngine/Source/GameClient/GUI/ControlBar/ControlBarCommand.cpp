@@ -773,8 +773,24 @@ void ControlBar::updateContextCommand()
 		{
 
 			// update the whole queue as necessary
-			if( pu->getProductionCount() != m_displayedQueueCount )
-				populateBuildQueue( obj );
+            Bool queueChanged = pu->getProductionCount() != m_displayedQueueCount;
+            const ProductionEntry *entry = pu->firstProduction();
+            for (Int index = 0; !queueChanged && index < MAX_BUILD_QUEUE_BUTTONS; ++index)
+            {
+                if (!entry)
+                {
+                    queueChanged = m_queueData[index].type != PRODUCTION_INVALID;
+                    break;
+                }
+                queueChanged = m_queueData[index].type != entry->getProductionType();
+                if (entry->getProductionType() == PRODUCTION_UNIT)
+                    queueChanged = queueChanged || m_queueData[index].productionID != entry->getProductionID();
+                else
+                    queueChanged = queueChanged || m_queueData[index].upgradeToResearch != entry->getProductionUpgrade();
+                entry = pu->nextProduction(entry);
+            }
+            if (queueChanged)
+                populateBuildQueue(obj);
 
 			//
 			// update the build percentage on the first thing (the thing that's being built)

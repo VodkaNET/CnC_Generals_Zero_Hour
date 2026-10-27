@@ -43,6 +43,7 @@
 #include "GameClient/HotKey.h"
 #include "GameClient/InGameUI.h"
 #include "GameClient/WindowLayout.h"
+#include "GameLogic/Module/ProductionUpdate.h"
 
 #include <math.h>
 
@@ -379,7 +380,8 @@ void ControlBar::fillData( ControlBarData &data )
 	for( Int i = 0; i < MAX_BUILD_QUEUE_BUTTONS; ++i )
 	{
 		const ControlBarButtonId id = { CBB_QUEUE, i };
-		readButton( getButtonWindow( id ), data.queueShown, data.queue[ i ] );
+        if (data.queueShown && m_queueData[i].type != PRODUCTION_INVALID)
+            readButton(getButtonWindow(id), TRUE, data.queue[i]);
 	}
 
 	data.portraitShown = !m_rightHUDUnitSelectParent->winIsHidden() && BitIsSet( m_rightHUDCameoWindow->winGetStatus(), WIN_STATUS_IMAGE );
