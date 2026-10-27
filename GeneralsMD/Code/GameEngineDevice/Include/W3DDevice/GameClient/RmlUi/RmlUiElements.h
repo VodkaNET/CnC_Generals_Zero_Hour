@@ -84,12 +84,14 @@ public:
 protected:
 	virtual void OnAttributeChange(const Rml::ElementAttributes &changed_attributes) override;
 	virtual void OnUpdate() override;
+    void OnRender() override;
 
 private:
 	void refresh();
 
 	// Rebuilt on update, after the parser has added any children (e.g. a <select> copying an option).
 	bool m_dirty = false;
+    bool m_grayscale = false;
 	Rml::String m_shownName; ///< a data binding sets the name again on every update; rebuild only when it changes
 };
 

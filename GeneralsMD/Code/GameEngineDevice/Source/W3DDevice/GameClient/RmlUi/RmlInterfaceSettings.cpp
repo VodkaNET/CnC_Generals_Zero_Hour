@@ -70,6 +70,7 @@ const Values &current()
         values.showUnitName = pref.getBool("ShowUnitName", FALSE);
         values.showGeneralRank = pref.getBool("ShowGeneralRank", FALSE);
         values.showPromotionPoints = pref.getBool("ShowPromotionPoints", FALSE);
+        values.colorDisabledIcons = pref.getBool("ColorDisabledIcons", FALSE);
         values.showIconHotkeys = pref.getBool("ShowIconHotkeys", TRUE);
         values.productionProgressStyle = pref.getInt("ProductionProgressStyle", 0) == 1 ? 1 : 0;
         loaded = true;
@@ -154,6 +155,7 @@ bool save(const Values &input, std::string &error)
     pref.setBool("ShowUnitName", next.showUnitName);
     pref.setBool("ShowGeneralRank", next.showGeneralRank);
     pref.setBool("ShowPromotionPoints", next.showPromotionPoints);
+    pref.setBool("ColorDisabledIcons", next.colorDisabledIcons);
     pref.setBool("ShowIconHotkeys", next.showIconHotkeys);
     pref.setInt("ProductionProgressStyle", next.productionProgressStyle);
     if (!pref.write())

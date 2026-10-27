@@ -98,6 +98,7 @@ void RmlOptionsScreen::load(Rml::Context *context)
 		constructor.Bind("show_unit_name", &m_model.showUnitName);
 		constructor.Bind("show_general_rank", &m_model.showGeneralRank);
 		constructor.Bind("show_promotion_points", &m_model.showPromotionPoints);
+		constructor.Bind("color_disabled_icons", &m_model.colorDisabledIcons);
 		constructor.Bind("show_icon_hotkeys", &m_model.showIconHotkeys);
 		constructor.Bind("production_progress_style", &m_model.productionProgressStyle);
 		constructor.Bind("interface_error", &m_model.interfaceError);
@@ -247,6 +248,7 @@ void RmlOptionsScreen::loadCurrentValues()
 	m_model.showGeneralRank = interfaceValues.showGeneralRank;
 	m_model.showPromotionPoints = interfaceValues.showPromotionPoints;
 	m_model.showIconHotkeys = interfaceValues.showIconHotkeys;
+	m_model.colorDisabledIcons = interfaceValues.colorDisabledIcons;
 	m_model.productionProgressStyle = interfaceValues.productionProgressStyle;
 	m_model.interfaceError.clear();
 	m_model.languageFilter = OptionsValues::GetCurrentLanguageFilter();
@@ -308,6 +310,7 @@ void RmlOptionsScreen::loadDefaultValues()
 	m_model.showGeneralRank = false;
 	m_model.showPromotionPoints = false;
 	m_model.showIconHotkeys = true;
+	m_model.colorDisabledIcons = false;
 	m_model.productionProgressStyle = 0;
 	m_model.interfaceError.clear();
 	m_model.languageFilter = OptionsValues::GetDefaultLanguageFilter();
@@ -484,6 +487,7 @@ bool RmlOptionsScreen::saveInterfaceValues()
     next.showGeneralRank = m_model.showGeneralRank;
     next.showPromotionPoints = m_model.showPromotionPoints;
     next.showIconHotkeys = m_model.showIconHotkeys;
+    next.colorDisabledIcons = m_model.colorDisabledIcons;
     next.productionProgressStyle = m_model.productionProgressStyle;
     if (m_model.customThemeIndex > 0 && m_model.customThemeIndex <= int(m_customThemes.size()))
         next.customTheme = m_customThemes[m_model.customThemeIndex - 1];

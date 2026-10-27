@@ -24,6 +24,7 @@ struct Values
     bool showGeneralRank = false;
     bool showPromotionPoints = false;
     bool showIconHotkeys = true;
+    bool colorDisabledIcons = false;
     int productionProgressStyle = 0;
 };
 

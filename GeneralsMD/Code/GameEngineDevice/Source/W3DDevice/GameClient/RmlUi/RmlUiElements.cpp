@@ -121,12 +121,44 @@ void RmlMappedImageElement::OnAttributeChange(const Rml::ElementAttributes &chan
 
 void RmlMappedImageElement::OnUpdate()
 {
-	Rml::Element::OnUpdate();
-	if (m_dirty)
-	{
-		m_dirty = false;
-		refresh();
-	}
+    Rml::Element::OnUpdate();
+    const bool refreshed = m_dirty;
+    if (m_dirty)
+    {
+        m_dirty = false;
+        refresh();
+    }
+    const bool grayscale = GetAttribute<bool>("grayscale", false) && !RmlInterfaceSettings::current().colorDisabledIcons;
+    if (refreshed || grayscale != m_grayscale)
+    {
+        m_grayscale = grayscale;
+        if (auto *image = GetFirstChild())
+        {
+            if (grayscale) image->SetProperty("display", "none");
+            else image->RemoveProperty("display");
+        }
+    }
+}
+
+void RmlMappedImageElement::OnRender()
+{
+    Rml::Element::OnRender();
+    if (!m_grayscale || !TheDisplay || !TheMappedImageCollection) return;
+    const auto name = GetAttribute<Rml::String>("name", "");
+    const Image *image = TheMappedImageCollection->findImageByName(AsciiString(name.c_str()));
+    if (!image) return;
+    const auto position = GetAbsoluteOffset(Rml::BoxArea::Content);
+    const auto size = GetBox().GetSize(Rml::BoxArea::Content);
+    if (size.x <= 0 || size.y <= 0) return;
+    struct ImageDraw { const Image *image; int x, y, right, bottom; UnsignedInt color; };
+    ImageDraw draw = {image, int(position.x + 0.5f), int(position.y + 0.5f),
+        int(position.x + size.x + 0.5f), int(position.y + size.y + 0.5f),
+        (UnsignedInt(std::clamp(GetComputedValues().opacity(), 0.0f, 1.0f) * 255.0f) << 24) | 0x00FFFFFF};
+    auto *renderer = static_cast<RmlUiRenderInterface *>(Rml::GetRenderInterface());
+    if (renderer) renderer->drawEngine([](void *context) {
+        const auto &draw = *static_cast<const ImageDraw *>(context);
+        TheDisplay->drawImage(draw.image, draw.x, draw.y, draw.right, draw.bottom, draw.color, Display::DRAW_IMAGE_GRAYSCALE);
+    }, &draw);
 }
 
 void RmlMappedImageElement::refresh()
