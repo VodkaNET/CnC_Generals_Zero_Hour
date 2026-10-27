@@ -387,6 +387,8 @@ void RmlOnlineGameSetupScreen::refreshFromGameState()
 	for (const GameSetupStartingCashOption &cash : data.m_options.m_startingCashOptions)
 		m_model.startingCashOptions.push_back(OptionModel{ cash.m_amount, unicodeToUtf8(cash.m_label) });
 
+    if (!m_model.isHost && !m_model.localAccepted && m_model.countdownSeconds < 0 && !m_model.startEnabled)
+        setStartButtonEnabled(true);
 	m_model.mapFound = data.m_options.m_mapFound == TRUE;
 	m_model.startingCash = (int)data.m_options.m_startingCash.countMoney();
 	m_model.superweaponsRestricted = data.m_options.m_superweaponsRestricted == TRUE;
@@ -472,8 +474,7 @@ void RmlOnlineGameSetupScreen::show()
 	m_model.colorPopoverSlot = -1;
 	if (m_modelHandle)
 	{
-		m_modelHandle.DirtyVariable("show_unused");
-		m_modelHandle.DirtyVariable("color_popover_slot");
+		m_modelHandle.DirtyAllVariables();
 	}
 
 	OnlineGameSetupSession::prepareGameState();
