@@ -88,6 +88,10 @@
 						<div class="opt-text"><div class="opt-label">Production Progress</div><div class="opt-desc">Choose the progress overlay for production and cooldown icons.</div></div>
 						<div class="opt-control"><select data-value="production_progress_style"><option value="0">Shutter (Default)</option><option value="1">Classic Radial</option></select></div>
 					</div>
+                    <label class="opt-row">
+                        <div class="opt-text"><div class="opt-label">Colored Disabled Icons</div><div class="opt-desc">Keep unavailable command, promotion and upgrade icons in color. Off uses the original black-and-white rendering.</div></div>
+                        <div class="opt-control"><input class="checkbox" type="checkbox" data-checked="color_disabled_icons"/></div>
+                    </label>
                     <div class="opt-head interface-category">Mobile UI</div>
                     <label class="opt-row">
                         <div class="opt-text"><div class="opt-label">Mobile Mode</div><div class="opt-desc">Add 30 percentage points to Interface Scale and ControlBar Scale. 100% becomes 130%.</div></div>

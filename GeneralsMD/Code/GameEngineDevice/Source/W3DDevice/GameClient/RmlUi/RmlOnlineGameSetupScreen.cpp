@@ -210,6 +210,7 @@ void RmlOnlineGameSetupScreen::load(Rml::Context *context)
 		constructor.Bind("map_found", &m_model.mapFound);
 		constructor.Bind("starting_cash", &m_model.startingCash);
 		constructor.Bind("superweapons_restricted", &m_model.superweaponsRestricted);
+		constructor.Bind("dynamic_weather", &m_model.dynamicWeather);
 		constructor.Bind("use_stats", &m_model.useStats);
 		constructor.Bind("limit_armies", &m_model.limitArmies);
 		constructor.Bind("is_host", &m_model.isHost);
@@ -244,6 +245,7 @@ void RmlOnlineGameSetupScreen::load(Rml::Context *context)
 		constructor.BindEventCallback("start_marker_mousedown", &RmlOnlineGameSetupScreen::onStartPositionMarkerMouseDown, this);
 		constructor.BindEventCallback("starting_cash_changed", &RmlOnlineGameSetupScreen::onStartingCashChanged, this);
 		constructor.BindEventCallback("superweapons_changed", &RmlOnlineGameSetupScreen::onSuperweaponsChanged, this);
+		constructor.BindEventCallback("dynamic_weather_changed", &RmlOnlineGameSetupScreen::onDynamicWeatherChanged, this);
 		constructor.BindEventCallback("select_map", &RmlOnlineGameSetupScreen::onSelectMap, this);
 		constructor.BindEventCallback("fill_ai", &RmlOnlineGameSetupScreen::onFillAI, this);
 		constructor.BindEventCallback("start", &RmlOnlineGameSetupScreen::onStart, this);
@@ -392,6 +394,7 @@ void RmlOnlineGameSetupScreen::refreshFromGameState()
 	m_model.mapFound = data.m_options.m_mapFound == TRUE;
 	m_model.startingCash = (int)data.m_options.m_startingCash.countMoney();
 	m_model.superweaponsRestricted = data.m_options.m_superweaponsRestricted == TRUE;
+	m_model.dynamicWeather = game && m_model.isHost && game->getDynamicWeather();
 
 	// Per-variable Dirty*() instead of DirtyAllVariables() -- see RmlLanGameSetupScreen::
 	// refreshFromGameState()'s comment for why.
@@ -407,6 +410,7 @@ void RmlOnlineGameSetupScreen::refreshFromGameState()
 		m_modelHandle.DirtyVariable("map_found");
 		m_modelHandle.DirtyVariable("starting_cash");
 		m_modelHandle.DirtyVariable("superweapons_restricted");
+		m_modelHandle.DirtyVariable("dynamic_weather");
 		m_modelHandle.DirtyVariable("use_stats");
 		m_modelHandle.DirtyVariable("limit_armies");
 		m_modelHandle.DirtyVariable("is_host");
@@ -708,6 +712,14 @@ void RmlOnlineGameSetupScreen::onStartingCashChanged(Rml::DataModelHandle, Rml::
 void RmlOnlineGameSetupScreen::onSuperweaponsChanged(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &)
 {
 	OnlineGameSetupActions::setSuperweaponRestriction(m_model.superweaponsRestricted ? TRUE : FALSE);
+	refreshFromGameState();
+}
+
+void RmlOnlineGameSetupScreen::onDynamicWeatherChanged(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &)
+{
+	NGMPGame *game = OnlineGameSetupSession::getCurrentGame();
+	if (game && game->amIHost() && !m_model.settingsLocked && !game->IsCountdownStarted())
+		game->setDynamicWeather(m_model.dynamicWeather);
 	refreshFromGameState();
 }
 

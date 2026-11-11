@@ -87,6 +87,7 @@ private:
 	void onStartPositionMarkerMouseDown(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &);
 	void onStartingCashChanged(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &);
 	void onSuperweaponsChanged(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &);
+	void onDynamicWeatherChanged(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &);
 	void onSelectMap(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &);
 	void onFillAI(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &); // "Fill with AI" (host): (occupant state)
 	void onStart(Rml::DataModelHandle, Rml::Event &, const Rml::VariantList &);
@@ -213,6 +214,7 @@ private:
 
 		int startingCash = 0;
 		bool superweaponsRestricted = false;
+		bool dynamicWeather = false;
 		bool useStats = false;    // CheckBoxUseStats -- always shown, never editable here
 		bool limitArmies = false; // CheckBoxLimitArmies -- always shown, never editable here
 

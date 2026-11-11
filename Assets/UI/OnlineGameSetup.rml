@@ -158,6 +158,11 @@
 							data-event-change="superweapons_changed"/>
 						<gametext key="GUI:LimitSuperweapons"/>
 					</label>
+					<label class="check" data-if="is_host">
+						<input class="checkbox" type="checkbox" data-checked="dynamic_weather"
+							data-attrif-disabled="settings_locked || countdown_seconds &gt;= 0" data-event-change="dynamic_weather_changed"/>
+						<gametext key="GO:GUI:DynamicWeather"/>
+					</label>
 					<!-- Rules the host set when creating the game: shown, never edited. -->
 					<div class="su-chips">
 						<div class="chip-status" data-class-on="limit_armies" data-tooltip="TOOLTIP:LimitArmies"><span class="chip-dot"></span><gametext key="GUI:LimitArmies"/></div>

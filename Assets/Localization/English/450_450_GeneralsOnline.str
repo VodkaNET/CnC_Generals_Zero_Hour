@@ -1190,6 +1190,10 @@ AR: "بلا فريق"
 UK: "Без команди"
 END
 
+GO:GUI:DynamicWeather
+US: "Dynamic Weather"
+END
+
 GO:GUI:ReadyToStart
 US: "Ready to start"
 DE: "Startbereit"
