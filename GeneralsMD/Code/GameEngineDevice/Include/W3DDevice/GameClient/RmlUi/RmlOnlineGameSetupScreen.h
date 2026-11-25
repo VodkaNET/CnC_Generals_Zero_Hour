@@ -214,7 +214,7 @@ private:
 
 		int startingCash = 0;
 		bool superweaponsRestricted = false;
-		bool dynamicWeather = false;
+		bool dynamicWeather = true;
 		bool useStats = false;    // CheckBoxUseStats -- always shown, never editable here
 		bool limitArmies = false; // CheckBoxLimitArmies -- always shown, never editable here
 

@@ -215,6 +215,7 @@ static NameKeyType windowMapID = NAMEKEY_INVALID;
 static NameKeyType windowMapSelectMapID = NAMEKEY_INVALID;
 static NameKeyType checkBoxUseStatsID = NAMEKEY_INVALID;
 static NameKeyType checkBoxLimitSuperweaponsID = NAMEKEY_INVALID;
+static NameKeyType checkBoxRandomWeatherID = NAMEKEY_INVALID;
 static NameKeyType comboBoxStartingCashID = NAMEKEY_INVALID;
 static NameKeyType checkBoxLimitArmiesID = NAMEKEY_INVALID;
 
@@ -228,6 +229,7 @@ static GameWindow *textEntryChat = NULL;
 static GameWindow *textEntryMapDisplay = NULL;
 static GameWindow *windowMap = NULL;
 static GameWindow *checkBoxUseStats = NULL;
+static GameWindow *checkBoxRandomWeather = NULL;
 static GameWindow *checkBoxLimitSuperweapons = NULL;
 static GameWindow *comboBoxStartingCash = NULL;
 static GameWindow *checkBoxLimitArmies = NULL;
@@ -740,10 +742,60 @@ static void handleLimitSuperweaponsClick()
 #endif
 }
 
+static void createRandomWeatherCheckbox()
+{
+	checkBoxRandomWeatherID = NAMEKEY("GameSpyGameOptionsMenu.wnd:CheckBoxRandomWeather");
+	checkBoxRandomWeather = TheWindowManager->winGetWindowFromId(parentWOLGameSetup, checkBoxRandomWeatherID);
+	if (!checkBoxRandomWeather)
+	{
+		Int width, height, chatWidth, chatHeight, chatX, chatY;
+		Int screenX, screenY, chatScreenX, chatScreenY, parentX, parentY;
+		checkBoxLimitSuperweapons->winGetSize(&width, &height);
+		listboxGameSetupChat->winGetSize(&chatWidth, &chatHeight);
+		listboxGameSetupChat->winGetPosition(&chatX, &chatY);
+		checkBoxLimitSuperweapons->winGetScreenPosition(&screenX, &screenY);
+		listboxGameSetupChat->winGetScreenPosition(&chatScreenX, &chatScreenY);
+		parentWOLGameSetup->winGetScreenPosition(&parentX, &parentY);
+		if (chatHeight <= height * 2)
+			return;
+
+		// Reserve one row above the chat and reuse the active checkbox theme and scale.
+		checkBoxRandomWeather = TheWindowManager->gogoGadgetCheckbox(parentWOLGameSetup,
+			checkBoxLimitSuperweapons->winGetStatus(), screenX - parentX, chatScreenY - parentY,
+			width, height, checkBoxLimitSuperweapons->winGetInstanceData(),
+			checkBoxLimitSuperweapons->winGetFont(), FALSE);
+		if (!checkBoxRandomWeather)
+			return;
+		checkBoxRandomWeather->winSetWindowId(checkBoxRandomWeatherID);
+		listboxGameSetupChat->winSetPosition(chatX, chatY + height);
+		listboxGameSetupChat->winSetSize(chatWidth, chatHeight - height);
+	}
+
+	WinInstanceData *data = checkBoxRandomWeather->winGetInstanceData();
+	data->m_decoratedNameString = "GameSpyGameOptionsMenu.wnd:CheckBoxRandomWeather";
+	data->m_textLabelString = "GO:GUI:DynamicWeather";
+	data->m_tooltipString.clear();
+	checkBoxRandomWeather->winSetTooltip(UnicodeString::TheEmptyString);
+	GadgetCheckBoxSetText(checkBoxRandomWeather, TheGameText->fetch("GO:GUI:DynamicWeather"));
+}
+
+static void refreshRandomWeatherCheckbox()
+{
+	if (!checkBoxRandomWeather || !TheNGMPGame)
+		return;
+	const Bool isHost = TheNGMPGame->amIHost();
+	checkBoxRandomWeather->winHide(!isHost);
+	checkBoxRandomWeather->winEnable(isHost && !TheNGMPGame->IsCountdownStarted());
+	if (GadgetCheckBoxIsChecked(checkBoxRandomWeather) != TheNGMPGame->getDynamicWeather())
+		GadgetCheckBoxSetChecked(checkBoxRandomWeather, TheNGMPGame->getDynamicWeather());
+}
+
 static void WOLLockSettings()
 {
 	buttonBack->winEnable(false);
 	checkBoxLimitSuperweapons->winEnable(false);
+	if (checkBoxRandomWeather)
+		checkBoxRandomWeather->winEnable(false);
 	comboBoxStartingCash->winEnable(false);
 
 	for (Int i = 0; i < MAX_SLOTS; ++i)
@@ -857,6 +909,7 @@ void WOLDisplayGameOptions()
 #endif
   if ( limitSuperweapons != GadgetCheckBoxIsChecked(checkBoxLimitSuperweapons))
     GadgetCheckBoxSetChecked( checkBoxLimitSuperweapons, limitSuperweapons );
+  refreshRandomWeatherCheckbox();
 
   Int itemCount = GadgetComboBoxGetLength(comboBoxStartingCash);
   Int index = 0;
@@ -1139,6 +1192,7 @@ void InitWOLGameGadgets()
 #endif
   checkBoxLimitArmies = TheWindowManager->winGetWindowFromId( parentWOLGameSetup, checkBoxLimitArmiesID );
   DEBUG_ASSERTCRASH(windowMap, ("Could not find the GameSpyGameOptionsMenu.wnd:CheckBoxLimitArmies" ));
+  createRandomWeatherCheckbox();
 
   // Limit Armies can ONLY be set in the Host Game window (PopupHostGame.wnd)
   checkBoxLimitArmies->winEnable( false );
@@ -1335,6 +1389,7 @@ void DeinitWOLGameGadgets()
 		windowMap = NULL;
 	}
 	checkBoxUseStats = NULL;
+	checkBoxRandomWeather = NULL;
   checkBoxLimitSuperweapons = NULL;
   comboBoxStartingCash = NULL;
 
@@ -1690,6 +1745,7 @@ void WOLGameSetupMenuUpdate( WindowLayout * layout, void *userData)
 {
 	// Refresh only the fast-changing connection indicators each frame.
 	WOLRefreshConnectionIndicators();
+	refreshRandomWeatherCheckbox();
 
 	// need to exit?
 	if (OnlineSessionExit::isTeardownReady())
@@ -2815,6 +2871,12 @@ WindowMsgHandledType WOLGameSetupMenuSystem( GameWindow *window, UnsignedInt msg
         {
           handleLimitSuperweaponsClick();
         }
+				else if (controlID == checkBoxRandomWeatherID)
+				{
+					if (TheNGMPGame && TheNGMPGame->amIHost() && !TheNGMPGame->IsCountdownStarted())
+						TheNGMPGame->setDynamicWeather(GadgetCheckBoxIsChecked(checkBoxRandomWeather));
+					refreshRandomWeatherCheckbox();
+				}
 				else
 				{
 					NGMP_OnlineServices_LobbyInterface* pLobbyInterface = NGMP_OnlineServicesManager::GetInterface<NGMP_OnlineServices_LobbyInterface>();
